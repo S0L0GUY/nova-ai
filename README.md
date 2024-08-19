@@ -1,1 +1,1 @@
-# nova-ai
+# Nova AI
