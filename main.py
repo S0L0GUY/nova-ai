@@ -5,20 +5,18 @@ set default output to cable a
 '''
 
 # TODO: Look for more TODO's in the code
-# TODO: Create a README.MD file
-# TODO: Create a website for Nova
+# TODO: Do stuff with the controll panel class
+# TODO: Make Nova sing national anthem
 # TODO: Add multilingual support
-# TODO: Add face recognition so the AI can look at people thrugh osc
-# TODO: Try to get e-mail send/recieve to work
-# TODO: Try to get VR Chat API to work
+# TODO: Add face recognition so the AI can look at people thrugh OSC
 
 # Character name is "〜NOVA〜"
 
 # Import necessary libraries and initialize debugging
-from debugFunctionLibrary import Debug as db
-db.clear()
-db.write("SYSTEM", "Program started")
-db.write("IMPORT", "Debug imported")
+from debugFunctionLibrary import Debug as debug
+debug.clear()
+debug.write("SYSTEM", "Program started")
+debug.write("IMPORT", "Debug imported")
 
 # Import all necesarry library's
 try:
@@ -33,10 +31,12 @@ try:
     import sys
     import whisper
     import numpy as np
-    db.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy")
+    from pydub import AudioSegment
+    from pydub.silence import split_on_silence
+    debug.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub")
 except ImportError as e:
     # Prints an error message if a library cannot be imported
-    db.write("ERROR", str(e))
+    debug.write("ERROR", str(e))
 
 # Set up OSC for chat and movement
 local_ip = "192.168.0.19" # Your computers local IP
@@ -50,14 +50,20 @@ try:
         # Get the current mood
         mood = file.read()
 except FileNotFoundError:
-    db.write("ERROR", "The file 'var/mood.txt' was not found.")
+    debug.write("ERROR", "The file 'var/mood.txt' was not found.")
 except IOError:
-    db.write("ERROR", "An I/O error occurred while trying to read the file.")
+    debug.write("ERROR", "An I/O error occurred while trying to read the file.")
 except Exception as e:
-    db.write("ERROR", f"An exception error has occured: {e}")
+    debug.write("ERROR", f"An exception error has occured: {e}")
 
 if not mood:
     mood = "normal"
+
+def debug_write(log_type, message):
+    if mood != "therapy":
+        debug.write(log_type, message)
+    else:
+        debug.write(log_type, "Therapy Mode Block")
 
 # Initialize pyttsx3 and set properties
 engine = pyttsx3.init()
@@ -98,12 +104,12 @@ with open('text_files/prompts/additional_system_prompt.txt', 'r') as file:
     # Load additional system prompt
     additional_system_prompt = file.read()                      
 
-system_prompt = f"{system_prompt} \n {additional_system_prompt}" # Put system prompt together
+system_prompt = f"{system_prompt} \n {additional_system_prompt} \n\n 한국어로 대화가 가능하지만, 플레이어가 말할 때만 가능합니다." # Put system prompt together
 
 # Create a variadable to store the chat history in
 history = [
     {"role": "system", "content": system_prompt},
-    {"role": "user", "content": "Hello"},
+    {"role": "user", "content": "Hello, can you introduce yourself?"},
 ]
 
 class controll_panel:
@@ -183,14 +189,13 @@ def type_in_chat(message):
 
 type_in_chat("System Loading...")
 
-# TODO: Change OpenAI whisper model to Faster Whisper
 def get_speech_input():
     """
     Returns:
         string: The detected speach input
 
     Use whisper to gather speach input and return the translation.
-    """    
+    """
     # Initialize PyAudio
     p = pyaudio.PyAudio()
     
@@ -264,61 +269,72 @@ delete_file("temp.wav")
 def restart_program():
     """Restarts the current program."""
     type_in_chat("Program Restarting...")
-    db.write("SYSTEM", "Restarting the program...")
+    debug_write("SYSTEM", "Restarting the program...")
     os.system('cls')
     python = sys.executable
     os.execl(python, python, *sys.argv)
 
+def send_look_direction(pitch, yaw, roll=0): # This function may not work correctly because Nova's avatar may not have OSC support
+    """
+    Args:
+        pitch (integer): The pitch that you want to set the head to.
+        yaw (integer): The yaw that you want to set the head to.
+        roll (integer, optional): The roll that you want to set the head to. Defaults to 0.
+
+    Point the head in a specified direction
+    """
+    osc_client.send_message("/avatar/parameters/LookDirection", [pitch, yaw, roll])
+
 def command_catcher():
     """Catches commands that the user says"""
     if "system reset" in user_input.lower():
-        db.write("COMMAND CATCHER", "System Reset Called")
+        debug_write("COMMAND CATCHER", "System Reset Called")
         restart_program()
-    elif "get angry" in user_input.lower():
-        db.write("COMMAND CATCHER", "Argument Mode Called")
+    elif "activate argument mode" in user_input.lower():
+        debug_write("COMMAND CATCHER", "Argument Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('argument')
         restart_program()
     elif "activate normal mode" in user_input.lower():
-        db.write("COMMAND CATCHER", "Normal Mode Called")
+        debug_write("COMMAND CATCHER", "Normal Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('normal')
         restart_program()
     elif "stop talking" in user_input.lower() or "shut up" in user_input.lower() or "time out" in user_input.lower():
-        db.write("COMMAND CATCHER", "Timeout Called")
+        debug_write("COMMAND CATCHER", "Timeout Called")
         time_left = 60
         while time_left > 0:
             type_in_chat(f"Timeout Period: {str(time_left)}")
             time_left -= 2
             time.sleep(2)
         restart_program()
-    elif "wrong information only" in user_input.lower():
-        db.write("COMMAND CATCHER", "wrong Information Only Called")
+    elif "activate misinformation mode" in user_input.lower():
+        debug_write("COMMAND CATCHER", "wrong Information Only Called")
         with open('var/mood.txt', 'w') as file:
             file.write('misinformation')
         restart_program()
     elif "get drunk" in user_input.lower():
-        db.write("COMMAND CATCHER", "Get Drunk Called")
+        debug_write("COMMAND CATCHER", "Get Drunk Called")
         with open('var/mood.txt', 'w') as file:
             file.write('drunk')
         restart_program()
     elif "activate depressed mode" in user_input.lower():
-        db.write("COMMAND CATCHER", "Depressed Mode Called")
+        debug_write("COMMAND CATCHER", "Depressed Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('depressed')
         restart_program()
     elif "activate therapy mode" in user_input.lower():
-        db.write("COMMAND CATCHER", "Therapy Mode Called")
+        debug_write("COMMAND CATCHER", "Therapy Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('therapy')
         restart_program()
     elif "activate anxious mode" in user_input.lower():
-        db.write("COMMAND CATCHER", "Anxious Mode Called")
+        debug_write("COMMAND CATCHER", "Anxious Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('anxious')
         restart_program()
     elif "activate sarcasm mode" in user_input.lower():
-        db.write("COMMAND CATCHER", "Sarcasm Mode Called")
+        debug_write("COMMAND CATCHER", "Sarcasm Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('sarcasm')
         restart_program()
@@ -326,20 +342,20 @@ def command_catcher():
 def ai_system_command_catcher(ai_input):
     """Catches commands that the AI says"""
     if "reset my system now" in ai_input.lower():
-        db.write("COMMAND CATCHER", "System Reset Called")
+        debug_write("COMMAND CATCHER", "System Reset Called")
         restart_program()
     elif "enter angry mode now" in ai_input.lower():
-        db.write("COMMAND CATCHER", "Argument Mode Called")
+        debug_write("COMMAND CATCHER", "Argument Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('argument')
         restart_program()
     elif "activate normal mode now" in ai_input.lower():
-        db.write("COMMAND CATCHER", "Normal Mode Called")
+        debug_write("COMMAND CATCHER", "Normal Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('normal')
         restart_program()
     elif "stop talking now" in ai_input.lower():
-        db.write("COMMAND CATCHER", "Timeout Called")
+        debug_write("COMMAND CATCHER", "Timeout Called")
         time_left = 60
         while time_left > 0:
             type_in_chat(f"Timeout Period: {str(time_left)}")
@@ -347,32 +363,32 @@ def ai_system_command_catcher(ai_input):
             time.sleep(2)
         restart_program()
     elif "activate wrong information now" in ai_input.lower():
-        db.write("COMMAND CATCHER", "wrong Information Only Called")
+        debug_write("COMMAND CATCHER", "wrong Information Only Called")
         with open('var/mood.txt', 'w') as file:
             file.write('misinformation')
         restart_program()
     elif "activate drunk mode now" in ai_input.lower():
-        db.write("COMMAND CATCHER", "Get Drunk Called")
+        debug_write("COMMAND CATCHER", "Get Drunk Called")
         with open('var/mood.txt', 'w') as file:
             file.write('drunk')
         restart_program()
     elif "activate my depressed mode now" in ai_input.lower():
-        db.write("COMMAND CATCHER", "Depressed Mode Called")
+        debug_write("COMMAND CATCHER", "Depressed Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('depressed')
         restart_program()
     elif "activate my therapy mode now" in ai_input.lower():
-        db.write("COMMAND CATCHER", "Therapy Mode Called")
+        debug_write("COMMAND CATCHER", "Therapy Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('therapy')
         restart_program()
     elif "activate my anxious mode now" in ai_input.lower():
-        db.write("COMMAND CATCHER", "Anxious Mode Called")
+        debug_write("COMMAND CATCHER", "Anxious Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('anxious')
         restart_program()
     elif "activate my sarcasm mode now" in ai_input.lower():
-        db.write("COMMAND CATCHER", "Sarcasm Mode Called")
+        debug_write("COMMAND CATCHER", "Sarcasm Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('sarcasm')
         restart_program()
@@ -403,7 +419,7 @@ while True:
                 delete_file("output.wav")
                 engine.save_to_file(sentence, "output.wav")
                 engine.runAndWait()
-                db.write("AI", sentence)
+                debug_write("AI", sentence)
                 type_in_chat(sentence)
                 play_tts("output.wav")
                 ai_system_command_catcher(sentence)
@@ -414,7 +430,7 @@ while True:
         delete_file("output.wav")
         engine.save_to_file(buffer, "output.wav")
         engine.runAndWait()
-        db.write("AI", buffer)
+        debug_write("AI", buffer)
         type_in_chat(buffer)
         play_tts("output.wav")
         ai_system_command_catcher(buffer)
@@ -428,5 +444,5 @@ while True:
         user_input = get_speech_input()
     history.append({"role": "user", "content": user_input})
 
-    db.write("PLAYER", user_input) # Adds the user input to the history
+    debug_write("PLAYER", user_input) # Adds the user input to the history
     command_catcher() # Checs the user input for commands

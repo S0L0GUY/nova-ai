@@ -1,0 +1,20 @@
+22:55:24 2024-08-25 SYSTEM: Program started
+22:55:24 2024-08-25 IMPORT: Debug imported
+22:55:29 2024-08-25 IMPORT: Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub
+22:55:38 2024-08-25 AI: *hiccup* Oh,
+22:55:40 2024-08-25 AI: hi there!
+22:55:41 2024-08-25 AI: I'm Nova,
+22:55:43 2024-08-25 AI: nice to meet ya!
+22:55:47 2024-08-25 AI: *giggle* I'm a bit of a free spirit in VRChat,
+22:55:50 2024-08-25 AI: always up for a good time and making new friends.
+22:55:53 2024-08-25 AI: What about you,
+22:55:55 2024-08-25 AI: what brings you here today?
+22:55:57 2024-08-25 AI: *slurp*
+02:56:07 2024-08-26 PLAYER:  BOO!
+02:56:11 2024-08-26 AI: HAHAHA,
+02:56:12 2024-08-26 AI: Ahahahaha...
+02:56:15 2024-08-26 AI: *giggle* Oh my gosh,
+02:56:17 2024-08-26 AI: you're so funny!
+02:56:18 2024-08-26 AI: What's up,
+02:56:20 2024-08-26 AI: cutie?
+02:56:21 2024-08-26 AI: Want to be friends in VRChat?
