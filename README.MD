@@ -13,7 +13,7 @@ Welcome to NOVA, a versatile VRChat AI assistant designed to interact with users
 
 ## Overview
 
-NOVA is an AI assistant designed for VRChat. It integrates with OpenAI's language model and uses Whisper for speech-to-text functionality. The script manages different moods, processes user input, and handles various commands to customize the assistant's behavior.
+NOVA is an AI assistant designed for VRChat. It integrates with OpenAI's API with LM Studio and uses Whisper for speech-to-text functionality. The script manages different moods, processes user input, and handles various commands to customize the assistant's behavior.
 
 ## Features
 
@@ -21,7 +21,7 @@ NOVA is an AI assistant designed for VRChat. It integrates with OpenAI's languag
 - **Moods**: Switches between different modes such as normal, argument, drunk, and more.
 - **Text-to-Speech**: Converts text responses into speech using pyttsx3.
 - **Speech Recognition**: Transcribes user speech to text using Whisper.
-- **OpenAI Integration**: Utilizes OpenAI’s model for generating responses.
+- **OpenAI Integration**: Utilizes OpenAI’s API with LM Studio for generating responses.
 
 ## Setup
 
