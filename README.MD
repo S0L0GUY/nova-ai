@@ -40,4 +40,10 @@ Ensure you have the following Python libraries installed:
 You can install these dependencies using pip:
 
 ```sh
-pip install openai pyttsx3 pyaudio python-osc whisper numpy
+pip install openai pyttsx3 pyaudio python-osc whisper numpy pydub
+
+Install LM studio [HERE](https://lmstudio.ai/)
+
+Install any virtual audio cables, as long as there is 2 cables it will work. I used [Vertual Audio Cable A+B](https://shop.vb-audio.com/en/win-apps/12-vb-cable-ab.html?SubmitCurrency=1&id_currency=1) But this option is donationwhere so you have to pay for it.
+
+VR Chat can just run in the background, nothing special with it. You will need to set the input mic to audio cable B and set your computer's default output to cable A.
