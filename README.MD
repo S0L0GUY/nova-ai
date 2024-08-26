@@ -41,6 +41,7 @@ You can install these dependencies using pip:
 
 ```sh
 pip install openai pyttsx3 pyaudio python-osc whisper numpy pydub
+```
 
 Install LM studio [HERE](https://lmstudio.ai/)
 
