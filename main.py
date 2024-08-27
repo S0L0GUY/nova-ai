@@ -78,7 +78,7 @@ for voice in voices:
         break
 
 # Whisper models include: tiny, base, small, medium, large
-model = whisper.load_model("small") # Load Whisper model
+model = whisper.load_model("base") # Load Whisper model
 
 # Point to the local LM Studio server
 openai_client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
@@ -92,7 +92,8 @@ mood_prompts = {
     "depressed": 'text_files/prompts/depressed_system_prompt.txt',
     "therapy": 'text_files/prompts/therapy_system_prompt.txt',
     "anxious": 'text_files/prompts/anxious_system_prompt.txt',
-    "sarcasm": 'text_files/prompts/sarcasm_system_prompt.txt'
+    "sarcasm": 'text_files/prompts/sarcasm_system_prompt.txt',
+    "pleasing": 'text_files/prompts/pleasing_system_prompt.txt'
 }
 
 system_prompt_file = mood_prompts.get(mood, 'text_files/prompts/normal_system_prompt.txt')
@@ -104,7 +105,7 @@ with open('text_files/prompts/additional_system_prompt.txt', 'r') as file:
     # Load additional system prompt
     additional_system_prompt = file.read()                      
 
-system_prompt = f"{system_prompt} \n {additional_system_prompt} \n\n 한국어로 대화가 가능하지만, 플레이어가 말할 때만 가능합니다." # Put system prompt together
+system_prompt = f"{system_prompt} \n {additional_system_prompt}" # Put system prompt together
 
 # Create a variadable to store the chat history in
 history = [
@@ -192,9 +193,9 @@ type_in_chat("System Loading...")
 def get_speech_input():
     """
     Returns:
-        string: The detected speach input
+        string: The detected speech input
 
-    Use whisper to gather speach input and return the translation.
+    Use Whisper to gather speech input and return the transcription.
     """
     # Initialize PyAudio
     p = pyaudio.PyAudio()
@@ -204,17 +205,33 @@ def get_speech_input():
     channels = 1
     rate = 16000
     chunk = 1024
-    record_seconds = 7
-
+    silence_threshold = -40  # Silence threshold in dB
+    silence_duration = 1000  # Duration of silence in ms (1 second)
+    
     # Open the audio stream
     stream = p.open(format=format, channels=channels, rate=rate, input=True, frames_per_buffer=chunk)
     
     # Record audio
     frames = []
     type_in_chat("Listening...")
-    for _ in range(int(rate / chunk * record_seconds)):
+    silent_chunks = 0
+    
+    while True:
         data = stream.read(chunk)
         frames.append(data)
+        
+        # Convert audio chunk to Pydub's AudioSegment for silence detection
+        audio_chunk = AudioSegment(data, sample_width=p.get_sample_size(format), frame_rate=rate, channels=channels)
+        
+        # Check if the audio chunk is silent
+        if audio_chunk.dBFS < silence_threshold:
+            silent_chunks += 1
+        else:
+            silent_chunks = 0
+        
+        # Stop recording after detecting sufficient silence
+        if silent_chunks > silence_duration / (1000 * chunk / rate):
+            break
     
     # Stop and close the stream
     stream.stop_stream()
@@ -232,7 +249,7 @@ def get_speech_input():
     result = model.transcribe('temp.wav')
     text = result['text']
 
-    # When the AI hears scilence it outputs " you" so this is the scuff fix
+    # When the AI hears silence it outputs "you", so this is the scuff fix
     if text != " you":
         return text
     else:
@@ -338,6 +355,11 @@ def command_catcher():
         with open('var/mood.txt', 'w') as file:
             file.write('sarcasm')
         restart_program()
+    elif "activate pleasing mode" in user_input.lower():
+        debug_write("COMMAND CATCHER", "Pleasing Mode Called")
+        with open('var/mood.txt', 'w') as file:
+            file.write('pleasing')
+        restart_program()
 
 def ai_system_command_catcher(ai_input):
     """Catches commands that the AI says"""
@@ -391,6 +413,11 @@ def ai_system_command_catcher(ai_input):
         debug_write("COMMAND CATCHER", "Sarcasm Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('sarcasm')
+        restart_program()
+    elif "activate my pleasing mode now" in ai_input.lower():
+        debug_write("COMMAND CATCHER", "Pleasing Mode Called")
+        with open('var/mood.txt', 'w') as file:
+            file.write('pleasing')
         restart_program()
 
 # Main loop

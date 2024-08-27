@@ -1,20 +1,173 @@
-22:55:24 2024-08-25 SYSTEM: Program started
-22:55:24 2024-08-25 IMPORT: Debug imported
-22:55:29 2024-08-25 IMPORT: Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub
-22:55:38 2024-08-25 AI: *hiccup* Oh,
-22:55:40 2024-08-25 AI: hi there!
-22:55:41 2024-08-25 AI: I'm Nova,
-22:55:43 2024-08-25 AI: nice to meet ya!
-22:55:47 2024-08-25 AI: *giggle* I'm a bit of a free spirit in VRChat,
-22:55:50 2024-08-25 AI: always up for a good time and making new friends.
-22:55:53 2024-08-25 AI: What about you,
-22:55:55 2024-08-25 AI: what brings you here today?
-22:55:57 2024-08-25 AI: *slurp*
-02:56:07 2024-08-26 PLAYER:  BOO!
-02:56:11 2024-08-26 AI: HAHAHA,
-02:56:12 2024-08-26 AI: Ahahahaha...
-02:56:15 2024-08-26 AI: *giggle* Oh my gosh,
-02:56:17 2024-08-26 AI: you're so funny!
-02:56:18 2024-08-26 AI: What's up,
-02:56:20 2024-08-26 AI: cutie?
-02:56:21 2024-08-26 AI: Want to be friends in VRChat?
+22:31:34 2024-08-26 SYSTEM: Program started
+22:31:34 2024-08-26 IMPORT: Debug imported
+22:31:38 2024-08-26 IMPORT: Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub
+22:31:55 2024-08-26 AI: Therapy Mode Block
+22:31:57 2024-08-26 AI: Therapy Mode Block
+22:31:59 2024-08-26 AI: Therapy Mode Block
+22:32:03 2024-08-26 AI: Therapy Mode Block
+22:32:09 2024-08-26 AI: Therapy Mode Block
+22:32:22 2024-08-26 PLAYER: Therapy Mode Block
+22:32:28 2024-08-26 AI: Therapy Mode Block
+22:32:34 2024-08-26 AI: Therapy Mode Block
+22:32:38 2024-08-26 AI: Therapy Mode Block
+22:32:54 2024-08-26 PLAYER: Therapy Mode Block
+22:33:01 2024-08-26 AI: Therapy Mode Block
+22:33:06 2024-08-26 AI: Therapy Mode Block
+22:33:13 2024-08-26 AI: Therapy Mode Block
+22:33:25 2024-08-26 PLAYER: Therapy Mode Block
+22:33:34 2024-08-26 AI: Therapy Mode Block
+22:33:38 2024-08-26 AI: Therapy Mode Block
+22:33:41 2024-08-26 AI: Therapy Mode Block
+22:33:44 2024-08-26 AI: Therapy Mode Block
+22:33:45 2024-08-26 AI: Therapy Mode Block
+22:33:59 2024-08-26 PLAYER: Therapy Mode Block
+22:34:07 2024-08-26 AI: Therapy Mode Block
+22:34:11 2024-08-26 AI: Therapy Mode Block
+22:34:14 2024-08-26 AI: Therapy Mode Block
+22:34:18 2024-08-26 AI: Therapy Mode Block
+22:34:22 2024-08-26 AI: Therapy Mode Block
+22:34:32 2024-08-26 PLAYER: Therapy Mode Block
+22:34:39 2024-08-26 AI: Therapy Mode Block
+22:34:44 2024-08-26 AI: Therapy Mode Block
+22:47:49 2024-08-26 PLAYER: Therapy Mode Block
+22:47:56 2024-08-26 AI: Therapy Mode Block
+22:48:01 2024-08-26 AI: Therapy Mode Block
+22:48:06 2024-08-26 AI: Therapy Mode Block
+22:48:15 2024-08-26 PLAYER: Therapy Mode Block
+22:48:24 2024-08-26 AI: Therapy Mode Block
+22:48:30 2024-08-26 AI: Therapy Mode Block
+22:48:45 2024-08-26 PLAYER: Therapy Mode Block
+22:48:48 2024-08-26 AI: Therapy Mode Block
+22:48:50 2024-08-26 AI: Therapy Mode Block
+22:49:23 2024-08-26 PLAYER: Therapy Mode Block
+22:49:26 2024-08-26 AI: Therapy Mode Block
+22:49:30 2024-08-26 AI: Therapy Mode Block
+23:22:43 2024-08-26 PLAYER: Therapy Mode Block
+23:22:47 2024-08-26 AI: Therapy Mode Block
+23:22:48 2024-08-26 AI: Therapy Mode Block
+23:22:51 2024-08-26 AI: Therapy Mode Block
+23:22:54 2024-08-26 AI: Therapy Mode Block
+23:23:08 2024-08-26 PLAYER: Therapy Mode Block
+23:23:14 2024-08-26 AI: Therapy Mode Block
+23:23:19 2024-08-26 AI: Therapy Mode Block
+23:23:23 2024-08-26 AI: Therapy Mode Block
+23:24:12 2024-08-26 PLAYER: Therapy Mode Block
+23:24:18 2024-08-26 AI: Therapy Mode Block
+23:27:25 2024-08-26 PLAYER: Therapy Mode Block
+23:27:33 2024-08-26 AI: Therapy Mode Block
+23:27:36 2024-08-26 AI: Therapy Mode Block
+23:27:44 2024-08-26 PLAYER: Therapy Mode Block
+23:27:48 2024-08-26 AI: Therapy Mode Block
+23:27:50 2024-08-26 AI: Therapy Mode Block
+23:28:00 2024-08-26 PLAYER: Therapy Mode Block
+23:28:07 2024-08-26 AI: Therapy Mode Block
+23:30:14 2024-08-26 PLAYER: Therapy Mode Block
+23:30:18 2024-08-26 AI: Therapy Mode Block
+23:30:22 2024-08-26 AI: Therapy Mode Block
+23:30:26 2024-08-26 AI: Therapy Mode Block
+23:30:29 2024-08-26 AI: Therapy Mode Block
+23:30:33 2024-08-26 AI: Therapy Mode Block
+23:30:43 2024-08-26 PLAYER: Therapy Mode Block
+23:30:51 2024-08-26 AI: Therapy Mode Block
+23:30:56 2024-08-26 AI: Therapy Mode Block
+23:31:06 2024-08-26 PLAYER: Therapy Mode Block
+23:31:11 2024-08-26 AI: Therapy Mode Block
+23:31:21 2024-08-26 PLAYER: Therapy Mode Block
+23:31:28 2024-08-26 AI: Therapy Mode Block
+23:31:31 2024-08-26 AI: Therapy Mode Block
+23:32:49 2024-08-26 PLAYER: Therapy Mode Block
+23:32:55 2024-08-26 AI: Therapy Mode Block
+23:33:01 2024-08-26 PLAYER: Therapy Mode Block
+23:33:05 2024-08-26 AI: Therapy Mode Block
+23:33:07 2024-08-26 AI: Therapy Mode Block
+23:33:39 2024-08-26 PLAYER: Therapy Mode Block
+23:33:44 2024-08-26 AI: Therapy Mode Block
+23:33:46 2024-08-26 AI: Therapy Mode Block
+23:33:59 2024-08-26 PLAYER: Therapy Mode Block
+23:34:03 2024-08-26 AI: Therapy Mode Block
+23:34:05 2024-08-26 AI: Therapy Mode Block
+23:34:09 2024-08-26 AI: Therapy Mode Block
+23:34:13 2024-08-26 AI: Therapy Mode Block
+23:34:27 2024-08-26 PLAYER: Therapy Mode Block
+23:34:30 2024-08-26 AI: Therapy Mode Block
+23:34:33 2024-08-26 AI: Therapy Mode Block
+23:40:08 2024-08-26 PLAYER: Therapy Mode Block
+23:40:13 2024-08-26 AI: Therapy Mode Block
+23:40:15 2024-08-26 AI: Therapy Mode Block
+23:40:16 2024-08-26 AI: Therapy Mode Block
+23:40:25 2024-08-26 PLAYER: Therapy Mode Block
+23:40:31 2024-08-26 AI: Therapy Mode Block
+23:40:41 2024-08-26 PLAYER: Therapy Mode Block
+23:40:47 2024-08-26 AI: Therapy Mode Block
+23:40:56 2024-08-26 PLAYER: Therapy Mode Block
+23:41:02 2024-08-26 AI: Therapy Mode Block
+23:41:05 2024-08-26 AI: Therapy Mode Block
+23:41:10 2024-08-26 PLAYER: Therapy Mode Block
+23:41:16 2024-08-26 AI: Therapy Mode Block
+23:41:27 2024-08-26 PLAYER: Therapy Mode Block
+23:41:44 2024-08-26 AI: Therapy Mode Block
+23:41:58 2024-08-26 PLAYER: Therapy Mode Block
+23:42:02 2024-08-26 AI: Therapy Mode Block
+23:42:04 2024-08-26 AI: Therapy Mode Block
+23:42:13 2024-08-26 PLAYER: Therapy Mode Block
+23:42:19 2024-08-26 AI: Therapy Mode Block
+23:42:22 2024-08-26 AI: Therapy Mode Block
+23:42:27 2024-08-26 AI: Therapy Mode Block
+23:42:36 2024-08-26 PLAYER: Therapy Mode Block
+23:42:41 2024-08-26 AI: Therapy Mode Block
+23:42:46 2024-08-26 AI: Therapy Mode Block
+23:42:57 2024-08-26 PLAYER: Therapy Mode Block
+23:43:02 2024-08-26 AI: Therapy Mode Block
+23:43:05 2024-08-26 AI: Therapy Mode Block
+23:43:07 2024-08-26 AI: Therapy Mode Block
+23:43:12 2024-08-26 AI: Therapy Mode Block
+23:43:16 2024-08-26 AI: Therapy Mode Block
+23:43:29 2024-08-26 PLAYER: Therapy Mode Block
+23:43:32 2024-08-26 AI: Therapy Mode Block
+23:43:37 2024-08-26 AI: Therapy Mode Block
+23:43:49 2024-08-26 PLAYER: Therapy Mode Block
+23:43:55 2024-08-26 AI: Therapy Mode Block
+23:43:59 2024-08-26 AI: Therapy Mode Block
+23:44:13 2024-08-26 PLAYER: Therapy Mode Block
+23:44:21 2024-08-26 AI: Therapy Mode Block
+23:44:27 2024-08-26 AI: Therapy Mode Block
+23:44:37 2024-08-26 PLAYER: Therapy Mode Block
+23:44:41 2024-08-26 AI: Therapy Mode Block
+23:44:42 2024-08-26 AI: Therapy Mode Block
+23:44:55 2024-08-26 PLAYER: Therapy Mode Block
+23:45:00 2024-08-26 AI: Therapy Mode Block
+23:45:05 2024-08-26 AI: Therapy Mode Block
+23:45:10 2024-08-26 AI: Therapy Mode Block
+23:45:18 2024-08-26 PLAYER: Therapy Mode Block
+23:45:25 2024-08-26 AI: Therapy Mode Block
+23:45:29 2024-08-26 PLAYER: Therapy Mode Block
+23:45:36 2024-08-26 AI: Therapy Mode Block
+23:45:44 2024-08-26 PLAYER: Therapy Mode Block
+23:45:52 2024-08-26 AI: Therapy Mode Block
+23:45:56 2024-08-26 AI: Therapy Mode Block
+23:45:58 2024-08-26 AI: Therapy Mode Block
+23:46:00 2024-08-26 AI: Therapy Mode Block
+23:46:02 2024-08-26 AI: Therapy Mode Block
+23:46:04 2024-08-26 AI: Therapy Mode Block
+23:46:06 2024-08-26 AI: Therapy Mode Block
+23:46:15 2024-08-26 AI: Therapy Mode Block
+23:46:27 2024-08-26 AI: Therapy Mode Block
+23:46:29 2024-08-26 AI: Therapy Mode Block
+23:46:33 2024-08-26 AI: Therapy Mode Block
+23:56:31 2024-08-26 PLAYER: Therapy Mode Block
+23:56:36 2024-08-26 AI: Therapy Mode Block
+23:56:38 2024-08-26 AI: Therapy Mode Block
+23:56:46 2024-08-26 PLAYER: Therapy Mode Block
+23:56:52 2024-08-26 AI: Therapy Mode Block
+23:56:55 2024-08-26 AI: Therapy Mode Block
+23:57:00 2024-08-26 AI: Therapy Mode Block
+23:57:04 2024-08-26 AI: Therapy Mode Block
+23:57:06 2024-08-26 AI: Therapy Mode Block
+23:57:08 2024-08-26 AI: Therapy Mode Block
+23:57:09 2024-08-26 AI: Therapy Mode Block
+23:57:10 2024-08-26 AI: Therapy Mode Block
+23:57:12 2024-08-26 AI: Therapy Mode Block
+23:57:15 2024-08-26 AI: Therapy Mode Block
+23:57:21 2024-08-26 AI: Therapy Mode Block
+23:57:39 2024-08-26 AI: Therapy Mode Block
+23:57:57 2024-08-26 AI: Therapy Mode Block
