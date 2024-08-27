@@ -62,11 +62,17 @@ For the actual code portion of this setup, it is really straight forward. As sho
 When you are ready to run the program, have VR Chat and LM Studio running and botted to the correct places. Open the main.py file and run it. If the terminal looks like this after a minute then you know that your program worked.
 
 07:14:19 2024-08-27 SYSTEM: Program started
+
 07:14:19 2024-08-27 IMPORT: Debug imported
+
 07:14:22 2024-08-27 IMPORT: Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub
+
 07:14:38 2024-08-27 AI: Hi!
+
 07:14:39 2024-08-27 AI: I'm Nova.
+
 07:14:41 2024-08-27 AI: Nice to meet you in VR Chat.
+
 07:14:43 2024-08-27 AI: What brings you here today?
 
 If it does not look like this, and there is an error, paste the error into chat GPT and ask it for help.
