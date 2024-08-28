@@ -75,7 +75,7 @@ When you are ready to run the program, have VR Chat and LM Studio running and bo
 
 07:14:43 2024-08-27 AI: What brings you here today?
 
-If it does not look like this, and there is an error, paste the error into chat GPT and ask it for help.
+If it does not look like this, and there is an error, paste the error into chat GPT and ask for help.
 
 ## Adding Modes
 
@@ -88,3 +88,5 @@ elif "activate mad mode" in user_input.lower():
         restart_program()
 
 It is really straightforward. You are also going to want to do this for "ai_system_command_catcher()". This function parses what the AI says for commands so you will want it to say "activate my mad mode now" instead of "activate mad mode".
+
+Now look in the "additional_system_prompt.txt" file. You are going to want to look at the paragraph that is talking about its different modes. Make sure to add a reference to that paragraph. Also, it would be good to note the process of having her say her own commands. So take a look at the second Modes section in the "aditional_system_prompt.txt" file. You are going to copy one of the entries and replace it with your information. For my example, I would enter "If you sense that the user wants you to enter mad mode, first confirm with them, then say exactly "activate my mad mode now"".
