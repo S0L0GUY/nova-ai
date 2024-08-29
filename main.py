@@ -4,10 +4,9 @@ set default playback to cable a
 set default output to cable a
 '''
 
-# TODO: Look for more TODO's in the code
+# TODO: Have some system so ~NOVA~ can remember past conversations (not theray mode)
 # TODO: Do stuff with the controll panel class
 # TODO: Make Nova sing national anthem
-# TODO: Add multilingual support
 # TODO: Add face recognition so the AI can look at people thrugh OSC
 
 # Character name is "〜NOVA〜"
@@ -146,6 +145,38 @@ class controll_panel:
         Returns the whole history of the conversation with the bot
         """
         return history
+    
+def play_audio_file(file_path, output_device_index=audio_device_index):
+    """
+    Args:
+        file_path (string): The path to the audio file.
+        output_device_index (integer, optional): The index of the audio device to play to. Defaults to None (default device).
+
+    Plays the specified audio file directly to the output device.
+    """
+    wf = wave.open(file_path, 'rb')
+    p = pyaudio.PyAudio()
+
+    # Open the audio stream
+    stream = p.open(
+        format=p.get_format_from_width(wf.getsampwidth()),
+        channels=wf.getnchannels(),
+        rate=wf.getframerate(),
+        output=True,
+        output_device_index=output_device_index
+    )
+
+    # Read and play audio data
+    data = wf.readframes(1024)
+    while data:
+        stream.write(data)
+        data = wf.readframes(1024)
+
+    # Cleanup
+    stream.stop_stream()
+    stream.close()
+    wf.close()
+    p.terminate()
 
 def play_tts(output_file, output_device_index=audio_device_index):
     """
@@ -178,6 +209,8 @@ def play_tts(output_file, output_device_index=audio_device_index):
     stream.close()
     wf.close()
     p.terminate()
+
+    play_audio_file('movie_1.wav')
 
 def type_in_chat(message):
     """
