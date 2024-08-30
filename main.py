@@ -210,8 +210,6 @@ def play_tts(output_file, output_device_index=audio_device_index):
     wf.close()
     p.terminate()
 
-    play_audio_file('movie_1.wav')
-
 def type_in_chat(message):
     """
     Args:
@@ -283,7 +281,7 @@ def get_speech_input():
     text = result['text']
 
     # When the AI hears silence it outputs "you", so this is the scuff fix
-    if text != " you":
+    if text != " you" and text != " Thank you.":
         return text
     else:
         return ""
