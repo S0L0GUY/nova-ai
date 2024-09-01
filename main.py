@@ -104,7 +104,7 @@ with open('text_files/prompts/additional_system_prompt.txt', 'r') as file:
     # Load additional system prompt
     additional_system_prompt = file.read()                      
 
-system_prompt = f"{system_prompt} \n {additional_system_prompt}" # Put system prompt together
+system_prompt = f"{system_prompt} \n {additional_system_prompt}" # Put the system prompt together
 
 # Create a variadable to store the chat history in
 history = [
