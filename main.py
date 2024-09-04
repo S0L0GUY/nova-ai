@@ -463,11 +463,13 @@ while True:
 
     new_message = {"role": "assistant", "content": ""}
     
-    type_in_chat("Thinking...")
+    type_in_chat("Thinking")
+    osc_client.send_message("/chatbox/typing", True)
 
     buffer = ""
 
     for chunk in completion: # Prosesses incoming data from AI model
+        osc_client.send_message("/chatbox/typing", True)
         if chunk.choices[0].delta.content:
             buffer += chunk.choices[0].delta.content
             # Process each chunk of text to break it into sentences
@@ -485,6 +487,7 @@ while True:
 
     # Process any remaining text after the stream ends
     if buffer:
+        osc_client.send_message("/chatbox/typing", True)
         delete_file("output.wav")
         engine.save_to_file(buffer, "output.wav")
         engine.runAndWait()
@@ -495,6 +498,7 @@ while True:
         new_message["content"] = buffer  # Populate the new_message with the remaining text
 
     history.append(new_message) # Add the message to the history
+    osc_client.send_message("/chatbox/typing", False)
 
     # Gets the users voice inpyt
     user_input = ""
