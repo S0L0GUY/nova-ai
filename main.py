@@ -4,10 +4,8 @@ set default playback to cable a
 set default output to cable a
 '''
 
-# TODO: Have some system so ~NOVA~ can remember past conversations (not theray mode)
 # TODO: Do stuff with the controll panel class
 # TODO: Make Nova sing national anthem
-# TODO: Add face recognition so the AI can look at people thrugh OSC
 
 # Character name is "〜NOVA〜"
 
@@ -109,7 +107,7 @@ system_prompt = f"{system_prompt} \n {additional_system_prompt}" # Put the syste
 # Create a variadable to store the chat history in
 history = [
     {"role": "system", "content": system_prompt},
-    {"role": "user", "content": "Hello, can you introduce yourself?"},
+    {"role": "user", "content": "Hey, can I friend you?"},
 ]
 
 class controll_panel:
