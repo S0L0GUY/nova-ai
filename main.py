@@ -68,12 +68,6 @@ engine.setProperty('rate', 200)  # Speed of speech
 engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
 voices = engine.getProperty('voices')
 
-for voice in voices:
-    # Set the voice to Zira for pyttsx3
-    if "Zira" in voice.name:
-        engine.setProperty('voice', voice.id)
-        break
-
 # Whisper models include: tiny, base, small, medium, large
 model = whisper.load_model("base") # Load Whisper model
 
@@ -107,7 +101,7 @@ system_prompt = f"{system_prompt} \n {additional_system_prompt}" # Put the syste
 # Create a variadable to store the chat history in
 history = [
     {"role": "system", "content": system_prompt},
-    {"role": "user", "content": "Hey, can I friend you?"},
+    {"role": "user", "content": "Hello, can you tell me about yourself?"},
 ]
 
 class controll_panel:
@@ -144,6 +138,15 @@ class controll_panel:
         """
         return history
     
+def set_voice(voice_name):
+    for voice in voices:
+        # Set the voice to Zira for pyttsx3
+        if voice_name in voice.name:
+            engine.setProperty('voice', voice.id)
+            break
+
+set_voice("Zira")
+
 def play_audio_file(file_path, output_device_index=audio_device_index):
     """
     Args:
@@ -312,6 +315,10 @@ def delete_file(path):
 delete_file("output.wav")
 delete_file("temp.wav")
 
+def contains_korean(text):
+    korean_pattern = re.compile(r'[\u1100-\u11FF\uAC00-\uD7AF]')
+    return bool(korean_pattern.search(text))
+
 def restart_program():
     """Restarts the current program."""
     type_in_chat("Program Restarting...")
@@ -475,8 +482,15 @@ while True:
             while len(sentence_chunks) > 1:
                 sentence = sentence_chunks.pop(0)
                 delete_file("output.wav")
-                engine.save_to_file(sentence, "output.wav")
-                engine.runAndWait()
+                if contains_korean(sentence):
+                    set_voice("Heami")
+                    engine.save_to_file(sentence, "output.wav")
+                    engine.runAndWait()
+                else:
+                    set_voice("Zira")
+                    engine.save_to_file(sentence, "output.wav")
+                    engine.runAndWait()
+                
                 debug_write("AI", sentence)
                 type_in_chat(sentence)
                 play_tts("output.wav")
@@ -487,8 +501,15 @@ while True:
     if buffer:
         osc_client.send_message("/chatbox/typing", True)
         delete_file("output.wav")
-        engine.save_to_file(buffer, "output.wav")
-        engine.runAndWait()
+        if contains_korean(sentence):
+            set_voice("Heami")
+            engine.save_to_file(sentence, "output.wav")
+            engine.runAndWait()
+        else:
+            set_voice("Zira")
+            engine.save_to_file(sentence, "output.wav")
+            engine.runAndWait()
+
         debug_write("AI", buffer)
         type_in_chat(buffer)
         play_tts("output.wav")
