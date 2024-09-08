@@ -1,0 +1,55 @@
+Date: 7/9/2024
+Time: 15:12
+Phone Number: +17608552115
+Message: Hello from Python!
+--------------------
+Date: 7/9/2024
+Time: 15:13
+Phone Number: +17608552115
+Message: Hello from Python!
+--------------------
+Date: 7/9/2024
+Time: 15:16
+Phone Number: +17608552115
+Message: Hello, this is an instant message!
+--------------------
+Date: 7/9/2024
+Time: 15:18
+Phone Number: +17608552115
+Message: Hello, this is an instant message!
+--------------------
+Date: 7/9/2024
+Time: 15:19
+Phone Number: +17608552115
+Message: Hello, this is an instant message!
+--------------------
+Date: 7/9/2024
+Time: 15:20
+Phone Number: +17608552115
+Message: Hello, this is an instant message!
+--------------------
+Date: 7/9/2024
+Time: 15:21
+Phone Number: +17608552115
+Message: Hello, this is an instant message!
+--------------------
+Date: 7/9/2024
+Time: 15:21
+Phone Number: +17608552115
+Message: Hello, this is an instant message!
+--------------------
+Date: 7/9/2024
+Time: 15:22
+Phone Number: +17608552115
+Message: Hello, this is an instant message!
+--------------------
+Date: 7/9/2024
+Time: 15:23
+Phone Number: +17608552115
+Message: Hello, this is an instant message!
+--------------------
+Date: 7/9/2024
+Time: 15:27
+Phone Number: +17608552115
+Message: Hello, this is an automated message!
+--------------------

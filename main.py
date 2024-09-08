@@ -5,7 +5,6 @@ set default output to cable a
 '''
 
 # TODO: Do stuff with the controll panel class
-# TODO: Make Nova sing national anthem
 
 # Character name is "〜NOVA〜"
 
@@ -30,7 +29,10 @@ try:
     import numpy as np
     from pydub import AudioSegment
     from pydub.silence import split_on_silence
-    debug.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub")
+    from datetime import datetime
+    import pyautogui
+    import keyboard
+    debug.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard")
 except ImportError as e:
     # Prints an error message if a library cannot be imported
     debug.write("ERROR", str(e))
@@ -62,11 +64,38 @@ def debug_write(log_type, message):
     else:
         debug.write(log_type, "Therapy Mode Block")
 
+bad_words = [
+    "fuck",
+    "fucking",
+    "nigger",
+    "faggot",
+    "bitch",
+    "hoe",
+    "asshole",
+    "bastard",
+    "motherfucker",
+    "fucker",
+    "cunt",
+    "shit",
+    "nigga",
+    "pussy",
+    "dick",
+    "slut",
+    "cock",
+    "retard"
+]
+
 # Initialize pyttsx3 and set properties
 engine = pyttsx3.init()
 engine.setProperty('rate', 200)  # Speed of speech
 engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
 voices = engine.getProperty('voices')
+
+for voice in voices:
+    # Set the voice to Zira for pyttsx3
+    if "Zira" in voice.name:
+        engine.setProperty('voice', voice.id)
+        break
 
 # Whisper models include: tiny, base, small, medium, large
 model = whisper.load_model("base") # Load Whisper model
@@ -101,7 +130,7 @@ system_prompt = f"{system_prompt} \n {additional_system_prompt}" # Put the syste
 # Create a variadable to store the chat history in
 history = [
     {"role": "system", "content": system_prompt},
-    {"role": "user", "content": "Hello, can you tell me about yourself?"},
+    {"role": "user", "content": "Hello, can you introduce yourself to me?"},
 ]
 
 class controll_panel:
@@ -138,14 +167,16 @@ class controll_panel:
         """
         return history
     
-def set_voice(voice_name):
-    for voice in voices:
-        # Set the voice to Zira for pyttsx3
-        if voice_name in voice.name:
-            engine.setProperty('voice', voice.id)
-            break
+def send_message_snapchat(message):
+    now = datetime.now()
+    date = now.strftime("%m/%d/%Y %I:%M %p")
 
-set_voice("Zira")
+    pyautogui.typewrite(f'~~~~{date}~~~~')
+    pyautogui.press('enter')
+
+    pyautogui.typewrite(message)
+
+    keyboard.press_and_release('enter')
 
 def play_audio_file(file_path, output_device_index=audio_device_index):
     """
@@ -327,34 +358,27 @@ def restart_program():
     python = sys.executable
     os.execl(python, python, *sys.argv)
 
-def send_look_direction(pitch, yaw, roll=0): # This function may not work correctly because Nova's avatar may not have OSC support
-    """
-    Args:
-        pitch (integer): The pitch that you want to set the head to.
-        yaw (integer): The yaw that you want to set the head to.
-        roll (integer, optional): The roll that you want to set the head to. Defaults to 0.
-
-    Point the head in a specified direction
-    """
-    osc_client.send_message("/avatar/parameters/LookDirection", [pitch, yaw, roll])
-
 def command_catcher():
     """Catches commands that the user says"""
     if "system reset" in user_input.lower():
         debug_write("COMMAND CATCHER", "System Reset Called")
+        send_message_snapchat("SYSTEM RESET CALLED BY PLAYER")
         restart_program()
     elif "activate argument mode" in user_input.lower():
-        debug_write("COMMAND CATCHER", "Argument Mode Called")
+        debug_write("COMMAND CATCHER", "Argument Mode Called BY PLAYER")
         with open('var/mood.txt', 'w') as file:
             file.write('argument')
+        send_message_snapchat("ARGUMENT MODE CALLED BY PLAYER")
         restart_program()
     elif "activate normal mode" in user_input.lower():
         debug_write("COMMAND CATCHER", "Normal Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('normal')
+        send_message_snapchat("NORMAL MODE CALLED BY PLAYER")
         restart_program()
     elif "stop talking" in user_input.lower() or "shut up" in user_input.lower() or "time out" in user_input.lower():
         debug_write("COMMAND CATCHER", "Timeout Called")
+        send_message_snapchat("STOP TALKING CALLED BY PLAYER")
         time_left = 60
         while time_left > 0:
             type_in_chat(f"Timeout Period: {str(time_left)}")
@@ -365,55 +389,66 @@ def command_catcher():
         debug_write("COMMAND CATCHER", "wrong Information Only Called")
         with open('var/mood.txt', 'w') as file:
             file.write('misinformation')
+        send_message_snapchat("MISINFORMATION MODE CALLED BY PLAYER")
         restart_program()
     elif "get drunk" in user_input.lower():
         debug_write("COMMAND CATCHER", "Get Drunk Called")
         with open('var/mood.txt', 'w') as file:
             file.write('drunk')
+        send_message_snapchat("DRUNK MODE CALLED BY PLAYER")
         restart_program()
     elif "activate depressed mode" in user_input.lower():
         debug_write("COMMAND CATCHER", "Depressed Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('depressed')
+        send_message_snapchat("DEPRESSED MODE CALLED BY PLAYER")
         restart_program()
     elif "activate therapy mode" in user_input.lower():
         debug_write("COMMAND CATCHER", "Therapy Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('therapy')
+        send_message_snapchat("THERAPY MODE CALLED BY PLAYER")
         restart_program()
     elif "activate anxious mode" in user_input.lower():
         debug_write("COMMAND CATCHER", "Anxious Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('anxious')
+        send_message_snapchat("ANXIOUS MODE CALLED BY PLAYER")
         restart_program()
     elif "activate sarcasm mode" in user_input.lower():
         debug_write("COMMAND CATCHER", "Sarcasm Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('sarcasm')
+        send_message_snapchat("SARCASM MODE CALLED BY PLAYER")
         restart_program()
     elif "activate pleasing mode" in user_input.lower():
         debug_write("COMMAND CATCHER", "Pleasing Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('pleasing')
+        send_message_snapchat("PLEASING MODE CALLED BY PLAYER")
         restart_program()
 
 def ai_system_command_catcher(ai_input):
     """Catches commands that the AI says"""
     if "reset my system now" in ai_input.lower():
         debug_write("COMMAND CATCHER", "System Reset Called")
+        send_message_snapchat("SYSTEM RESET CALLED BY ~NOVA~")
         restart_program()
     elif "enter angry mode now" in ai_input.lower():
         debug_write("COMMAND CATCHER", "Argument Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('argument')
+        send_message_snapchat("ANGRY MODE CALLED BY ~NOVA~")
         restart_program()
     elif "activate normal mode now" in ai_input.lower():
         debug_write("COMMAND CATCHER", "Normal Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('normal')
+        send_message_snapchat("NORMAL MODE CALLED BY ~NOVA~")
         restart_program()
     elif "stop talking now" in ai_input.lower():
         debug_write("COMMAND CATCHER", "Timeout Called")
+        send_message_snapchat("TIMEOUT CALLED BY ~NOVA~")
         time_left = 60
         while time_left > 0:
             type_in_chat(f"Timeout Period: {str(time_left)}")
@@ -424,37 +459,49 @@ def ai_system_command_catcher(ai_input):
         debug_write("COMMAND CATCHER", "wrong Information Only Called")
         with open('var/mood.txt', 'w') as file:
             file.write('misinformation')
+            send_message_snapchat("MISINFORMATION MODE CALLED BY ~NOVA~")
         restart_program()
     elif "activate drunk mode now" in ai_input.lower():
         debug_write("COMMAND CATCHER", "Get Drunk Called")
         with open('var/mood.txt', 'w') as file:
             file.write('drunk')
+        send_message_snapchat("DRUNK MODE CALLED BY ~NOVA~")
         restart_program()
     elif "activate my depressed mode now" in ai_input.lower():
         debug_write("COMMAND CATCHER", "Depressed Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('depressed')
+        send_message_snapchat("DEPRESSED MODE CALLED BY ~NOVA~")
         restart_program()
     elif "activate my therapy mode now" in ai_input.lower():
         debug_write("COMMAND CATCHER", "Therapy Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('therapy')
+        send_message_snapchat("THERAPY MODE CALLED BY ~NOVA~")
         restart_program()
     elif "activate my anxious mode now" in ai_input.lower():
         debug_write("COMMAND CATCHER", "Anxious Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('anxious')
+        send_message_snapchat("ANXIOUS MODE CALLED BY ~NOVA~")
         restart_program()
     elif "activate my sarcasm mode now" in ai_input.lower():
         debug_write("COMMAND CATCHER", "Sarcasm Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('sarcasm')
+        send_message_snapchat("SARCASM MODE CALLED BY ~NOVA~")
         restart_program()
     elif "activate my pleasing mode now" in ai_input.lower():
         debug_write("COMMAND CATCHER", "Pleasing Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('pleasing')
+        send_message_snapchat("PLEASING MODE CALLED BY ~NOVA~")
         restart_program()
+
+send_message_snapchat(F"PROGRAM STARTED IN {mood.upper()} MODE")
+
+def find_matching_words(word_list, variable):
+    return [word for word in word_list if word in variable]
 
 # Main loop
 while True:
@@ -482,15 +529,8 @@ while True:
             while len(sentence_chunks) > 1:
                 sentence = sentence_chunks.pop(0)
                 delete_file("output.wav")
-                if contains_korean(sentence):
-                    set_voice("Heami")
-                    engine.save_to_file(sentence, "output.wav")
-                    engine.runAndWait()
-                else:
-                    set_voice("Zira")
-                    engine.save_to_file(sentence, "output.wav")
-                    engine.runAndWait()
-                
+                engine.save_to_file(sentence, "output.wav")
+                engine.runAndWait()
                 debug_write("AI", sentence)
                 type_in_chat(sentence)
                 play_tts("output.wav")
@@ -501,15 +541,8 @@ while True:
     if buffer:
         osc_client.send_message("/chatbox/typing", True)
         delete_file("output.wav")
-        if contains_korean(sentence):
-            set_voice("Heami")
-            engine.save_to_file(sentence, "output.wav")
-            engine.runAndWait()
-        else:
-            set_voice("Zira")
-            engine.save_to_file(sentence, "output.wav")
-            engine.runAndWait()
-
+        engine.save_to_file(buffer, "output.wav")
+        engine.runAndWait()
         debug_write("AI", buffer)
         type_in_chat(buffer)
         play_tts("output.wav")
@@ -524,6 +557,12 @@ while True:
     while not user_input:  # Keep prompting until valid input is received
         user_input = get_speech_input()
     history.append({"role": "user", "content": user_input})
+
+    matching_words = find_matching_words(bad_words, user_input.lower())
+
+    if matching_words:
+        matched_words_str = ', '.join(matching_words)
+        send_message_snapchat(f"PROFANITY DETECTED: {matched_words_str.upper()} /{user_input}")
 
     debug_write("PLAYER", user_input) # Adds the user input to the history
     command_catcher() # Checs the user input for commands
