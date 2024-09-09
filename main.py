@@ -4,8 +4,6 @@ set default playback to cable a
 set default output to cable a
 '''
 
-# TODO: Do stuff with the controll panel class
-
 # Character name is "〜NOVA〜"
 
 # Import necessary libraries and initialize debugging
@@ -32,7 +30,8 @@ try:
     from datetime import datetime
     import pyautogui
     import keyboard
-    debug.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard")
+    import json
+    debug.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard, json")
 except ImportError as e:
     # Prints an error message if a library cannot be imported
     debug.write("ERROR", str(e))
@@ -133,40 +132,9 @@ history = [
     {"role": "user", "content": "Hello, can you introduce yourself to me?"},
 ]
 
-class controll_panel:
-    """Create a simple way for an external program to manipulate this program"""
-    def add_system_message(message):
-        history.append({"role": "system", "content": message})
+with open('history.json', 'w') as file:
+    json.dump(history, file, indent=4)
 
-
-    def restart_program():
-        """
-        Restart this program
-        """
-        restart_program()
-
-
-    def activate_mode(mode):
-        """
-        Args:
-        mode (string): The mode to put the ai model into
-
-
-        Activate a mode to put the LLM into
-        """
-        ai_system_command_catcher(f"activate {mode} mode now")
-
-
-    def request_conversation_logs():
-        """
-        Returns:
-        (list): The whole conversation between the user and the AI bot durring the current session
-
-
-        Returns the whole history of the conversation with the bot
-        """
-        return history
-    
 def send_message_snapchat(message):
     now = datetime.now()
     date = now.strftime("%m/%d/%Y %I:%M %p")
@@ -519,6 +487,7 @@ while True:
     osc_client.send_message("/chatbox/typing", True)
 
     buffer = ""
+    full_response = ""
 
     for chunk in completion: # Prosesses incoming data from AI model
         osc_client.send_message("/chatbox/typing", True)
@@ -528,6 +497,7 @@ while True:
             sentence_chunks = chunk_text(buffer)
             while len(sentence_chunks) > 1:
                 sentence = sentence_chunks.pop(0)
+                full_response += f" {sentence}"
                 delete_file("output.wav")
                 engine.save_to_file(sentence, "output.wav")
                 engine.runAndWait()
@@ -540,6 +510,7 @@ while True:
     # Process any remaining text after the stream ends
     if buffer:
         osc_client.send_message("/chatbox/typing", True)
+        full_response += f" {buffer}"
         delete_file("output.wav")
         engine.save_to_file(buffer, "output.wav")
         engine.runAndWait()
@@ -547,16 +518,29 @@ while True:
         type_in_chat(buffer)
         play_tts("output.wav")
         ai_system_command_catcher(buffer)
-        new_message["content"] = buffer  # Populate the new_message with the remaining text
+        new_message["content"] = full_response  # Populate the new_message with the remaining text
 
     history.append(new_message) # Add the message to the history
     osc_client.send_message("/chatbox/typing", False)
+
+    # Save history to json
+    with open('history.json', 'w') as file:
+        json.dump(history, file, indent=4)
 
     # Gets the users voice inpyt
     user_input = ""
     while not user_input:  # Keep prompting until valid input is received
         user_input = get_speech_input()
+
+    # Load history from json
+    with open('history.json', 'r') as file:
+        history = json.load(file)
+
     history.append({"role": "user", "content": user_input})
+
+    # Save history to json
+    with open('history.json', 'w') as file:
+        json.dump(history, file, indent=4)
 
     matching_words = find_matching_words(bad_words, user_input.lower())
 
