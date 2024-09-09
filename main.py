@@ -321,6 +321,7 @@ def contains_korean(text):
 def restart_program():
     """Restarts the current program."""
     type_in_chat("Program Restarting...")
+    
     debug_write("SYSTEM", "Restarting the program...")
     os.system('cls')
     python = sys.executable
