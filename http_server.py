@@ -1,4 +1,5 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
+# from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import urllib.parse
 
@@ -6,6 +7,8 @@ import urllib.parse
 # http://192.168.0.19:8080/add_message/This%20is%20a%20test
 # http://192.168.0.19:8080/logs
 
+# TODO: Make sound effect thingy
+# TODO: Find out why http requests are slow sometimes
 
 def add_message(message):
     with open('history.json', 'r') as file:
@@ -38,6 +41,41 @@ def remove_leading_space(s):
         return s[1:]
     return s
 
+def reset_logs():
+
+    mood_prompts = {
+        "normal": 'text_files/prompts/normal_system_prompt.txt',
+        "argument": 'text_files/prompts/argument_system_prompt.txt',
+        "misinformation": 'text_files/prompts/misinformation_system_prompt.txt',
+        "drunk": 'text_files/prompts/drunk_system_prompt.txt',
+        "depressed": 'text_files/prompts/depressed_system_prompt.txt',
+        "therapy": 'text_files/prompts/therapy_system_prompt.txt',
+        "anxious": 'text_files/prompts/anxious_system_prompt.txt',
+        "sarcasm": 'text_files/prompts/sarcasm_system_prompt.txt',
+        "pleasing": 'text_files/prompts/pleasing_system_prompt.txt'
+    }
+
+    system_prompt_file = mood_prompts.get(mood, 'text_files/prompts/normal_system_prompt.txt')
+
+    with open(system_prompt_file, 'r') as file:
+        system_prompt = file.read()
+
+    with open('text_files/prompts/additional_system_prompt.txt', 'r') as file:
+        # Load additional system prompt
+        additional_system_prompt = file.read()                      
+
+    system_prompt = f"{system_prompt} \n {additional_system_prompt}"
+
+    history = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": "Hello, can you introduce yourself to me?"},
+    ]
+    
+    with open('history.json', 'w') as file:
+        json.dump(history, file, indent=4)
+
+    return "Logs Cleared"
+
 # Define a function to handle commands
 def handle_command(user_command, *args):
     command = remove_leading_space(user_command)
@@ -50,6 +88,8 @@ def handle_command(user_command, *args):
         return status()
     elif command == "mood":
         return mood()
+    elif command == "restart":
+        return reset_logs()
     else:
         return "Command Not Found."
 
@@ -73,7 +113,10 @@ class RequestHandler(BaseHTTPRequestHandler):
         except Exception as e:
             self._send_response(f"Error: {str(e)}")
 
-def run(server_class=HTTPServer, handler_class=RequestHandler, port=8080):
+
+# server_class=HTTPServer, handler_class=RequestHandler, port=8080
+
+def run(server_class=ThreadingHTTPServer, handler_class=RequestHandler, port=8080):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     print(f'Starting httpd server on port {port}...')
