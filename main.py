@@ -7,7 +7,7 @@ set default output to cable a
 # Character name is "〜NOVA〜"
 
 # Import necessary libraries and initialize debugging
-from debugFunctionLibrary import Debug as debug
+from debug_function_library import Debug as debug
 debug.clear()
 debug.write("SYSTEM", "Program started")
 debug.write("IMPORT", "Debug imported")
@@ -89,7 +89,6 @@ bad_words = [
 # Initialize pyttsx3 and set properties
 engine = pyttsx3.init()
 engine.setProperty('rate', 200)  # Speed of speech
-engine.setProperty('pitch', 150) # Pitch of speach (0, 200)
 engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
 voices = engine.getProperty('voices')
 
@@ -325,10 +324,6 @@ def delete_file(path):
 
 delete_file("output.wav")
 delete_file("temp.wav")
-
-def contains_korean(text):
-    korean_pattern = re.compile(r'[\u1100-\u11FF\uAC00-\uD7AF]')
-    return bool(korean_pattern.search(text))
 
 def restart_program():
     """Restarts the current program."""
