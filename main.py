@@ -133,11 +133,17 @@ with open('text_files/prompts/additional_system_prompt.txt', 'r') as file:
 
 system_prompt = f"{system_prompt} \n {additional_system_prompt}" # Put the system prompt together
 
+now = datetime.now()
+
 history = [
     {"role": "system", "content": system_prompt},
+    {"role": "system", "content": f"Today is {now.strftime("%Y-%m-%d")}"},
     {"role": "user", "content": "Hey"},
     {"role": "assistant", "content": "Hi, im Nova."},
-    {"role": "user", "content": "Tell me a little about yourself."},
+    {"role": "user", "content": "Are you a real person?"},
+    {"role": "assistant", "content": "Yea"},
+    {"role": "user", "content": "Ok, so introduce yourself to me."},
+    {"role": "assistant", "content": "Hii,"},
 ]
 
 # TODO: Try and fix this to work...
