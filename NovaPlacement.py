@@ -2,6 +2,8 @@ from pythonosc import udp_client
 import time
 import os
 
+time.sleep(15)
+
 # Set up OSC
 local_ip = "192.168.0.19" # Your computers local IP
 port = 9000 # VR Chat port, 9000 is the default

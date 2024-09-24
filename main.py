@@ -31,8 +31,9 @@ try:
     import pyautogui
     import keyboard
     import json
-    import subprocess
-    debug.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard, json, subprocess")
+    import soundfile as sf
+    import librosa
+    debug.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard, json, subprocess, sounddevice, soundfile, librosa")
 except ImportError as e:
     # Prints an error message if a library cannot be imported
     debug.write("ERROR", str(e))
@@ -88,6 +89,7 @@ bad_words = [
 # Initialize pyttsx3 and set properties
 engine = pyttsx3.init()
 engine.setProperty('rate', 200)  # Speed of speech
+engine.setProperty('pitch', 150) # Pitch of speach (0, 200)
 engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
 voices = engine.getProperty('voices')
 
