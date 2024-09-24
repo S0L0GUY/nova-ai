@@ -12,6 +12,16 @@ debug.clear()
 debug.write("SYSTEM", "Program started")
 debug.write("IMPORT", "Debug imported")
 
+from pythonosc import udp_client
+debug.write("IMPORT", "pythonosc imported")
+
+# Set up OSC for chat and movement
+local_ip = "192.168.0.19" # Your computers local IP
+port = 9000 # VR Chat port, 9000 is the default
+osc_client = udp_client.SimpleUDPClient(local_ip, port)
+
+osc_client.send_message("/chatbox/input", ["Program starting...", True])
+
 # Import all necesarry library's
 try:
     from openai import OpenAI
@@ -19,7 +29,6 @@ try:
     import pyttsx3
     import time
     import pyaudio
-    from pythonosc import udp_client
     import re
     import wave
     import sys
@@ -36,12 +45,8 @@ try:
     debug.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard, json, subprocess, sounddevice, soundfile, librosa")
 except ImportError as e:
     # Prints an error message if a library cannot be imported
+    osc_client.send_message("/chatbox/input", [str(e), True])
     debug.write("ERROR", str(e))
-
-# Set up OSC for chat and movement
-local_ip = "192.168.0.19" # Your computers local IP
-port = 9000 # VR Chat port, 9000 is the default
-osc_client = udp_client.SimpleUDPClient(local_ip, port)
 
 audio_device_index = 6 # The index of the audio output device
 
