@@ -135,7 +135,9 @@ system_prompt = f"{system_prompt} \n {additional_system_prompt}" # Put the syste
 
 history = [
     {"role": "system", "content": system_prompt},
-    {"role": "user", "content": "Hello, can you introduce yourself to me?"},
+    {"role": "user", "content": "Hey"},
+    {"role": "assistant", "content": "Hi, im Nova."},
+    {"role": "user", "content": "Tell me a little about yourself."},
 ]
 
 # TODO: Try and fix this to work...
