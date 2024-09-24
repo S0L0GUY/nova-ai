@@ -1,11 +1,8 @@
-14:27:52 2024-09-24 SYSTEM: Program started
-14:27:52 2024-09-24 IMPORT: Debug imported
-14:27:52 2024-09-24 IMPORT: pythonosc imported
-14:27:56 2024-09-24 IMPORT: Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard, json, subprocess, sounddevice, soundfile, librosa
-14:28:00 2024-09-24 AI:  I'm Nova!
-14:28:02 2024-09-24 AI: I'm 20,
-14:28:03 2024-09-24 AI: born on August 4th,
-14:28:06 2024-09-24 AI: 2024 (yeah,
-14:28:08 2024-09-24 AI: that's a weird birthday),
-14:28:10 2024-09-24 AI: and I love chillin' in VRChat with friends.
-14:28:13 2024-09-24 AI: What about you?
+15:33:01 2024-09-24 SYSTEM: Program started
+15:33:01 2024-09-24 IMPORT: Debug imported
+15:33:02 2024-09-24 IMPORT: pythonosc imported
+15:33:11 2024-09-24 IMPORT: Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard, json, subprocess, sounddevice, soundfile, librosa
+15:33:35 2024-09-24 AI:  I'm Nova!
+15:33:37 2024-09-24 AI: So,
+15:33:38 2024-09-24 AI: what's up?
+15:33:40 2024-09-24 AI: How's your day going so far?
