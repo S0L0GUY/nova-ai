@@ -499,80 +499,101 @@ def find_matching_words(word_list, variable):
 
 # Main loop
 while True:
-    # Creates model parameters
-    completion = openai_client.chat.completions.create(
-        model="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
-        messages=history,
-        temperature=0.9,
-        stream=True,
-    )
+    try:
+        # Creates model parameters
+        completion = openai_client.chat.completions.create(
+            model="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
+            messages=history,
+            temperature=0.9,
+            stream=True,
+        )
 
-    new_message = {"role": "assistant", "content": ""}
-    
-    type_in_chat("Thinking")
-    osc_client.send_message("/chatbox/typing", True)
-
-    buffer = ""
-    full_response = ""
-
-    for chunk in completion: # Prosesses incoming data from AI model
+        new_message = {"role": "assistant", "content": ""}
+        
+        type_in_chat("Thinking")
         osc_client.send_message("/chatbox/typing", True)
-        if chunk.choices[0].delta.content:
-            buffer += chunk.choices[0].delta.content
-            # Process each chunk of text to break it into sentences
-            sentence_chunks = chunk_text(buffer)
-            while len(sentence_chunks) > 1:
-                sentence = sentence_chunks.pop(0)
-                full_response += f" {sentence}"
-                delete_file("output.wav")
-                engine.save_to_file(sentence, "output.wav")
-                engine.runAndWait()
-                debug_write("AI", sentence)
-                type_in_chat(sentence)
-                play_tts("output.wav")
-                ai_system_command_catcher(sentence)
-            buffer = sentence_chunks[0]  # Keep the remaining text in the buffer
 
-    # Process any remaining text after the stream ends
-    if buffer:
-        osc_client.send_message("/chatbox/typing", True)
-        full_response += f" {buffer}"
-        delete_file("output.wav")
-        engine.save_to_file(buffer, "output.wav")
-        engine.runAndWait()
-        debug_write("AI", buffer)
-        type_in_chat(buffer)
-        play_tts("output.wav")
-        ai_system_command_catcher(buffer)
-        new_message["content"] = full_response  # Populate the new_message with the remaining text
+        buffer = ""
+        full_response = ""
 
-    history.append(new_message) # Add the message to the history
-    osc_client.send_message("/chatbox/typing", False)
+        for chunk in completion: # Prosesses incoming data from AI model
+            osc_client.send_message("/chatbox/typing", True)
+            if chunk.choices[0].delta.content:
+                buffer += chunk.choices[0].delta.content
+                # Process each chunk of text to break it into sentences
+                sentence_chunks = chunk_text(buffer)
+                while len(sentence_chunks) > 1:
+                    sentence = sentence_chunks.pop(0)
+                    full_response += f" {sentence}"
+                    delete_file("output.wav")
+                    engine.save_to_file(sentence, "output.wav")
+                    engine.runAndWait()
+                    debug_write("AI", sentence)
+                    type_in_chat(sentence)
+                    play_tts("output.wav")
+                    ai_system_command_catcher(sentence)
+                buffer = sentence_chunks[0]  # Keep the remaining text in the buffer
 
-    # Save history to json
-    with open('history.json', 'w') as file:
-        json.dump(history, file, indent=4)
+        # Process any remaining text after the stream ends
+        if buffer:
+            osc_client.send_message("/chatbox/typing", True)
+            full_response += f" {buffer}"
+            delete_file("output.wav")
+            engine.save_to_file(buffer, "output.wav")
+            engine.runAndWait()
+            debug_write("AI", buffer)
+            type_in_chat(buffer)
+            play_tts("output.wav")
+            ai_system_command_catcher(buffer)
+            new_message["content"] = full_response  # Populate the new_message with the remaining text
 
-    # Gets the users voice inpyt
-    user_input = ""
-    while not user_input:  # Keep prompting until valid input is received
-        user_input = get_speech_input()
+        history.append(new_message) # Add the message to the history
+        osc_client.send_message("/chatbox/typing", False)
 
-    # Load history from json
-    with open('history.json', 'r') as file:
-        history = json.load(file)
+        # Save history to json
+        with open('history.json', 'w') as file:
+            json.dump(history, file, indent=4)
 
-    history.append({"role": "user", "content": user_input})
+        # Gets the users voice inpyt
+        user_input = ""
+        while not user_input:  # Keep prompting until valid input is received
+            user_input = get_speech_input()
 
-    # Save history to json
-    with open('history.json', 'w') as file:
-        json.dump(history, file, indent=4)
+        # Load history from json
+        with open('history.json', 'r') as file:
+            history = json.load(file)
 
-    matching_words = find_matching_words(bad_words, user_input.lower())
+        history.append({"role": "user", "content": user_input})
 
-    if matching_words:
-        matched_words_str = ', '.join(matching_words)
-        send_message_snapchat(f"PROFANITY DETECTED: {matched_words_str.upper()} /{user_input}")
+        # Save history to json
+        with open('history.json', 'w') as file:
+            json.dump(history, file, indent=4)
 
-    debug_write("PLAYER", user_input) # Adds the user input to the history
-    command_catcher() # Checs the user input for commands
+        matching_words = find_matching_words(bad_words, user_input.lower())
+
+        if matching_words:
+            matched_words_str = ', '.join(matching_words)
+            send_message_snapchat(f"PROFANITY DETECTED: {matched_words_str.upper()} /{user_input}")
+
+        debug_write("PLAYER", user_input) # Adds the user input to the history
+        command_catcher() # Checs the user input for commands
+    except Exception as e:
+        debug_write("ERROR", e)
+        now = datetime.now()
+        date = now.strftime("%m/%d/%Y %I:%M %p")
+
+        pyautogui.typewrite(f'~~~~{date}~~~~')
+        pyautogui.press('enter')
+
+        pyautogui.typewrite(f"ERROR: {e}")
+
+        keyboard.press_and_release('enter')
+        try:
+            osc_client.send_message("/chatbox/input", [f"ERROR: {e}", True])
+            os.system('cd F:/USB/vr-ai-chatbot-main')
+            os.system('python main.py')
+            break
+        except:
+            os.system('cd F:/USB/vr-ai-chatbot-main')
+            os.system('python main.py')
+            break
