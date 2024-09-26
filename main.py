@@ -33,15 +33,11 @@ try:
     import wave
     import sys
     import whisper
-    import numpy as np
     from pydub import AudioSegment
-    from pydub.silence import split_on_silence
     from datetime import datetime
     import pyautogui
     import keyboard
     import json
-    import soundfile as sf
-    import librosa
     debug.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard, json, subprocess, sounddevice, soundfile, librosa")
 except ImportError as e:
     # Prints an error message if a library cannot be imported
