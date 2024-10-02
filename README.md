@@ -13,7 +13,7 @@ Welcome to NOVA, a versatile VRChat AI assistant designed to interact with users
 
 ## Overview
 
-NOVA is an AI assistant designed for VRChat. It integrates with OpenAI's API with LM Studio and uses Whisper for speech-to-text functionality. The script manages different moods, processes user input, and handles various commands to customize the assistant's behavior.
+NOVA is an AI assistant designed for VRChat. She integrates with OpenAI's API with LM Studio and uses Whisper for speech-to-text functionality. The script manages different moods, processes user input, and handles various commands to customize the assistant's behavior.
 
 ## Features
 
@@ -38,16 +38,17 @@ Ensure you have the following Python libraries installed:
 
 - `openai`
 - `pyttsx3`
-- `pyaudio`
-- `pythonosc`
 - `whisper`
-- `numpy`
-- `re`
+- `pydub`
+- `pyautogui`
+- `keyboard`
+- `python-osc`
+- `pyaudio`
 
 You can install these dependencies using pip:
 
 ```sh
-pip install openai pyttsx3 pyaudio python-osc whisper numpy pydub
+pip install openai pyttsx3 pyaudio whisper-openai pydub pyautogui keyboard python-osc
 ```
 
 Install LM studio [HERE](https://lmstudio.ai/). Once LM Studios is installed and set up, Navigate to the magnifying glass button and search for "
@@ -75,18 +76,20 @@ When you are ready to run the program, have VR Chat and LM Studio running and bo
 
 07:14:43 2024-08-27 AI: What brings you here today?
 
-If it does not look like this, and there is an error, paste the error into chat GPT and ask for help.
+If it does not look like this, and there is an error, paste the error into Chat GPT and ask for help.
 
 ## Adding Modes
 
-Adding modes is easy, you are going to want to first create the prompt (I usually ask chat GPT to do it). You don't want the prompt to mention things like her name or that she has other modes because that is explained in the additional system prompt. Create a new file called "(mood)_system_prompt.txt" so if you were making a mad mood, you would want to name it "mad_system_prompt.txt". Paste the system prompt into the file. Now locate the variable called "mood_prompts" and follow the format of the other entries. Add the comma at the end of the last entry and create a new entry. In my example it would look like ""mad": 'text_files/prompts/mad_system_prompt.txt'". Now you're going to want to add the command so that a player can put her in the mood. In "main.py" locate the function called "command_catcher()". You will want to scroll to the bottom of the function and add a new elif statement. I will usually just copy an old elif statement and replace it with the new data. For example, this is how I would fill out my new mode:
+Adding modes is easy, you are going to want to first create the prompt (I usually ask chat GPT to do it). You don't want the prompt to mention things like her name or that she has other modes because that is explained in the additional system prompt. Create a new file called "(mood)_system_prompt.txt" so if you were making a mad mood, you would want to name it "mad_system_prompt.txt". Paste the system prompt into the file. Now locate the variable called "mood_prompts" and follow the format of the other entries. Add the comma at the end of the last entry and create a new entry. In my example it would look like `"mad": 'text_files/prompts/mad_system_prompt.txt'`. Now you're going to want to add the command so that a player can put her in the mood. In "main.py" locate the function called `command_catcher()`. You will want to scroll to the bottom of the function and add a new elif statement. I will usually just copy an old elif statement and replace it with the new data. For example, this is how I would fill out my new mode:
 
+```Python
 elif "activate mad mode" in user_input.lower():
         debug_write("COMMAND CATCHER", "Mad Mode Called")
         with open('var/mood.txt', 'w') as file:
             file.write('mad')
         restart_program()
+```
 
-It is really straightforward. You are also going to want to do this for "ai_system_command_catcher()". This function parses what the AI says for commands so you will want it to say "activate my mad mode now" instead of "activate mad mode".
+It is really straightforward. You are also going to want to do this for `ai_system_command_catcher()`. This function parses what the AI says for commands so you will want it to say "activate my mad mode now" instead of "activate mad mode".
 
 Now look in the "additional_system_prompt.txt" file. You are going to want to look at the paragraph that is talking about its different modes. Make sure to add a reference to that paragraph. Also, it would be good to note the process of having her say her own commands. So take a look at the second Modes section in the "aditional_system_prompt.txt" file. You are going to copy one of the entries and replace it with your information. For my example, I would enter "If you sense that the user wants you to enter mad mode, first confirm with them, then say exactly "activate my mad mode now"".
