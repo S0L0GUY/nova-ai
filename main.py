@@ -159,12 +159,12 @@ def send_message_snapchat(message):
     now = datetime.now()
     date = now.strftime("%m/%d/%Y %I:%M %p")
 
-    pyautogui.typewrite(f'~~~~{date}~~~~')
-    pyautogui.press('enter')
+    pyautogui.typewrite(f"~~~~{date}~~~~")
+    pyautogui.press("enter")
 
     pyautogui.typewrite(message)
 
-    keyboard.press_and_release('enter')
+    keyboard.press_and_release("enter")
 
 def play_audio_file(file_path, output_device_index=audio_device_index):
     """
@@ -335,7 +335,7 @@ delete_file("output.wav")
 delete_file("temp.wav")
 
 def restart_program():
-    """Restarts the current program."""
+    """Restart the current program."""
     type_in_chat("Program Restarting...")
     
     debug_write("SYSTEM", "Restarting the program...")
@@ -490,8 +490,18 @@ def ai_system_command_catcher(ai_input):
 
 send_message_snapchat(F"PROGRAM STARTED IN {mood.upper()} MODE")
 
-def find_matching_words(word_list, variable):
-    return [word for word in word_list if word in variable]
+def find_matching_words(word_list, string_to_check):
+    """
+    Args:
+        word_list (list): All of the words that you want to detect.
+        string_to_check (): The string that you want to parce for words.
+
+    Returns:
+        boolian: Is there a word from the list in the string to check?
+
+    Parse the string to check for words in the list.
+    """    
+    return [word for word in word_list if word in string_to_check]
 
 # Main loop
 while True:
@@ -550,7 +560,7 @@ while True:
         with open('history.json', 'w') as file:
             json.dump(history, file, indent=4)
 
-        # Gets the users voice inpyt
+        # Gets the users voice input
         user_input = ""
         while not user_input:  # Keep prompting until valid input is received
             user_input = get_speech_input()
@@ -572,8 +582,9 @@ while True:
             send_message_snapchat(f"PROFANITY DETECTED: {matched_words_str.upper()} /{user_input}")
 
         debug_write("PLAYER", user_input) # Adds the user input to the history
-        command_catcher() # Checs the user input for commands
+        command_catcher() # Cheks the user input for commands
     except Exception as e:
+        # Handle an error
         debug_write("ERROR", e)
         now = datetime.now()
         date = now.strftime("%m/%d/%Y %I:%M %p")
@@ -584,6 +595,7 @@ while True:
         pyautogui.typewrite(f"ERROR: {e}")
 
         keyboard.press_and_release('enter')
+        # Try to send a message to the vrchat avatar
         try:
             osc_client.send_message("/chatbox/input", [f"ERROR: {e}", True])
             os.system('cd F:/USB/vr-ai-chatbot-main')
