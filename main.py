@@ -153,6 +153,10 @@ with open('history.json', 'w') as file:
     json.dump(history, file, indent=4)
 
 def send_message_snapchat(message):
+    flagged_message = "🚩MESSAGE FLAGGED🚩\nSending message to creator..."
+    type_in_chat(flagged_message)
+    osc_client.send_message("/chatbox/typing", True)
+    
     now = datetime.now()
     date = now.strftime("%m/%d/%Y %I:%M %p")
 
