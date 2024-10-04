@@ -142,6 +142,13 @@ history = [
     {"role": "assistant", "content": "Hii,"},
 ]
 
+with open('text_files\prompts\snapchat_system_prompt.txt', 'r') as file:
+    snapchat_system_prompt = file.read()
+
+snapchat_history=[
+    {"role": "system", "content": snapchat_system_prompt},
+]
+
 with open('history.json', 'w') as file:
     json.dump(history, file, indent=4)
 
@@ -149,22 +156,28 @@ def send_message_snapchat(message):
     now = datetime.now()
     date = now.strftime("%m/%d/%Y %I:%M %p")
 
+    snapchat_history.append({"role": "user", "content": message})
+
     pyautogui.typewrite(f"~~~~{date}~~~~")
     pyautogui.press("enter")
 
-    with open('text_files/prompts/snapchat_system_pormpt.txt', 'r') as file:
-        snapchat_system_prompt = file.read()
+    debug.write("SYSTEM", "Sending message to Snapchat")
+    new_message = {"role": "assistant", "content": ""}
 
     completion = openai_client.chat.completions.create(
-        model="model-identifier",
-        messages=[
-            {"role": "system", "content": snapchat_system_prompt},
-            {"role": "user", "content": message}
-        ],
+        model="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
+        messages=snapchat_history,
         temperature=0.5,
+        stream=True,
     )
+    
+    for chunk in completion:
+        if chunk.choices[0].delta.content:
+            print(chunk.choices[0].delta.content, end="", flush=True)
+            new_message["content"] += chunk.choices[0].delta.content
 
-    pyautogui.typewrite(completion.choices[0].message)
+    pyautogui.typewrite(new_message["content"])
+    snapchat_history.append(new_message)
 
     keyboard.press_and_release("enter")
 
