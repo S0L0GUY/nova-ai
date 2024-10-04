@@ -84,7 +84,9 @@ bad_words = [
     "dick",
     "slut",
     "cock",
-    "retard"
+    "retard",
+    "tit",
+    "sex",
 ]
 
 # Initialize pyttsx3 and set properties
@@ -171,7 +173,7 @@ def send_message_snapchat(message):
     completion = openai_client.chat.completions.create(
         model="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
         messages=snapchat_history,
-        temperature=0.5,
+        temperature=0.2,
         stream=True,
     )
     
