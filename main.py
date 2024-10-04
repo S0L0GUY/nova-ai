@@ -155,21 +155,32 @@ with open('history.json', 'w') as file:
     json.dump(history, file, indent=4)
 
 def send_message_snapchat(message):
+    """
+    Args:
+        message (string): The message boing sent to snapchat.
+
+    Input and send a message to Snapchat with pyautogui and text generation with lmstudios
+    """    
+    # Type to the VR Chat textbot saying that the message was flagged
     flagged_message = "🚩MESSAGE FLAGGED🚩\nSending message to creator..."
     type_in_chat(flagged_message)
     osc_client.send_message("/chatbox/typing", True)
     
+    # Get the current date and time
     now = datetime.now()
     date = now.strftime("%m/%d/%Y %I:%M %p")
 
+    # Append the message to Snapchat
     snapchat_history.append({"role": "user", "content": message})
 
+    # Type the hedder
     pyautogui.typewrite(f"~~~~{date}~~~~")
     pyautogui.press("enter")
 
-    debug.write("SYSTEM", "Sending message to Snapchat")
+    debug.write("SYSTEM", "Generating message for Snapchat.")
     new_message = {"role": "assistant", "content": ""}
 
+    # Create a response with AI
     completion = openai_client.chat.completions.create(
         model="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
         messages=snapchat_history,
@@ -179,13 +190,14 @@ def send_message_snapchat(message):
     
     for chunk in completion:
         if chunk.choices[0].delta.content:
-            print(chunk.choices[0].delta.content, end="", flush=True)
             new_message["content"] += chunk.choices[0].delta.content
 
     pyautogui.typewrite(new_message["content"])
     snapchat_history.append(new_message)
 
     keyboard.press_and_release("enter")
+
+    debug.write("SNAPCHAT", new_message["content"])
 
 def play_audio_file(file_path, output_device_index=audio_device_index):
     """

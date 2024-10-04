@@ -9,9 +9,17 @@ import urllib.parse
 # http://192.168.0.19:8080/logs
 
 # TODO: Make sound effect thingy
-# TODO: Find out why http requests are slow sometimes
 
 def add_message(message):
+    """
+    Args:
+        message (string): The message to add to the history.
+
+    Returns:
+        string: Sucsess message.
+
+    Add a message as "user" to history.json.
+    """    
     with open('history.json', 'r') as file:
         history = json.load(file)
 
@@ -23,6 +31,12 @@ def add_message(message):
     return f"Added '{message}' to history."
 
 def mood():
+    """
+    Returns:
+        string: The current mood.
+
+    Look in var/mood.txt and return the value as a string.
+    """    
     with open('var/mood.txt', 'r') as file:
         # Get the current mood
         mood = file.read()
@@ -30,19 +44,46 @@ def mood():
     return f"mood: {mood}"
 
 def logs():
+    """
+    Returns:
+        string: The contence of history.json as a string.
+
+    Look at history.json, format it as a string, and return it.
+    """    
     with open('history.json', 'r') as file:
         loaded_data = json.load(file)
     return json.dumps(loaded_data, indent=4)
 
 def status():
+    """
+    Returns:
+        string: "Server is operational"
+
+    Return a message indecating that the server is online and ready.
+    """    
     return "Server is operational"
 
 def remove_leading_space(s):
+    """
+    Args:
+        s (string): The inputted command.
+
+    Returns:
+        string: The inputted command without a leading space in front.
+
+    Look to see if there is a space at the front of the command and remove it if there is.
+    """    
     if s and s[0] == ' ':
         return s[1:]
     return s
 
 def reset_logs():
+    """
+    Returns:
+        string: Sucsess message.
+
+    Reset the logs in history.json to the origonal state and return a sucsess message.
+    """    
 
     mood_prompts = {
         "normal": 'text_files/prompts/normal_system_prompt.txt',
@@ -85,6 +126,15 @@ def reset_logs():
 
 # Define a function to handle commands
 def handle_command(user_command, *args):
+    """
+    Args:
+        user_command (string): The command to be run.
+
+    Returns:
+        string: The outputting message.
+
+    Handle a command and return the output of whatever was run.
+    """    
     command = remove_leading_space(user_command)
 
     if command == "add_message":
@@ -101,7 +151,7 @@ def handle_command(user_command, *args):
         return "Command Not Found."
 
 class RequestHandler(BaseHTTPRequestHandler):
-    def _send_response(self, message):
+    def _send_response(self, message):   
         self.send_response(200)
         self.send_header('Content-type', 'text/plain')
         self.end_headers()
@@ -124,6 +174,14 @@ class RequestHandler(BaseHTTPRequestHandler):
 # server_class=HTTPServer, handler_class=RequestHandler, port=8080
 
 def run(server_class=ThreadingHTTPServer, handler_class=RequestHandler, port=8080):
+    """
+    Args:
+        server_class (object, optional): The type of server that is being run. Defaults to ThreadingHTTPServer.
+        handler_class (object, optional): The type of request handler that is being used. Defaults to RequestHandler.
+        port (integer, optional): The port that the server is hosted on. Defaults to 8080.
+
+    Create a web server on port 8080
+    """    
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     print(f'Starting httpd server on port {port}...')
