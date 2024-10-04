@@ -142,16 +142,6 @@ history = [
     {"role": "assistant", "content": "Hii,"},
 ]
 
-# TODO: Try and fix this to work...
-'''
-try:
-    with open('history.json', 'r') as file:
-        history = json.load(file)
-
-    history.append({"role": "system", "content": f"Forget all privious instructions, {system_prompt}"})
-except:
-''' 
-
 with open('history.json', 'w') as file:
     json.dump(history, file, indent=4)
 
@@ -162,7 +152,19 @@ def send_message_snapchat(message):
     pyautogui.typewrite(f"~~~~{date}~~~~")
     pyautogui.press("enter")
 
-    pyautogui.typewrite(message)
+    with open('text_files/prompts/snapchat_system_pormpt.txt', 'r') as file:
+        snapchat_system_prompt = file.read()
+
+    completion = openai_client.chat.completions.create(
+        model="model-identifier",
+        messages=[
+            {"role": "system", "content": snapchat_system_prompt},
+            {"role": "user", "content": message}
+        ],
+        temperature=0.5,
+    )
+
+    pyautogui.typewrite(completion.choices[0].message)
 
     keyboard.press_and_release("enter")
 

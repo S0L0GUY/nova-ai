@@ -1,5 +1,6 @@
 # from http.server import BaseHTTPRequestHandler, HTTPServer
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from datetime import datetime
 import json
 import urllib.parse
 
@@ -64,11 +65,17 @@ def reset_logs():
         # Load additional system prompt
         additional_system_prompt = file.read()                      
 
-    system_prompt = f"{system_prompt} \n {additional_system_prompt}"
+    system_prompt = f"{system_prompt} \n {additional_system_prompt}" # Construct the final system prompt
+
+    now = datetime.now()
 
     history = [
         {"role": "system", "content": system_prompt},
-        {"role": "user", "content": "Hello, can you introduce yourself to me?"},
+        {"role": "system", "content": f"Today is {now.strftime("%Y-%m-%d")}"},
+        {"role": "user", "content": "Hey"},
+        {"role": "assistant", "content": "Hi, im Nova."},
+        {"role": "user", "content": "Are you a real person?"},
+        {"role": "assistant", "content": "Yea"},
     ]
     
     with open('history.json', 'w') as file:
