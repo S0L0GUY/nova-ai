@@ -21,11 +21,18 @@ print(f"Number of buttons: {joystick.get_numbuttons()}")
 print(f"Number of hats: {joystick.get_numhats()}")
 
 def clear_screen():
+    """Check the operating system and clear the termanal."""    
     os.system('cls' if os.name == 'nt' else 'clear')
 
 # Main loop to capture all controller values
 
 def get_joystick_inputs():
+    """
+    Returns:
+        string: All of the values of the controller.
+
+    Display all of the values of an x-box controller.
+    """    
     output = ""
     pygame.event.pump()  # Updates pygame events
 

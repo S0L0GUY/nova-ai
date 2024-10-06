@@ -1,6 +1,7 @@
 import pyaudio
 
 def list_audio_devices():
+    """List all of the audio devices and their indexes."""    
     p = pyaudio.PyAudio()
     device_count = p.get_device_count()
     
