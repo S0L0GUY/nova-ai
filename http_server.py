@@ -125,15 +125,17 @@ def reset_logs():
     return "Logs Cleared"
 
 def change_language(language):
-    supported_languages = {"en", "de", "fr", "it", "pt-PT", "es", "hi", "th"}
+    supported_languages = {"en", "de", "fr", "it", "pt-PT", "es", "hi", "th", "ko"}
 
-    if language in supported_languages:
-        with open('text_files\language.txt', 'a', encoding='utf-8') as file:
-            file.write(language)
+    formatted_language = remove_leading_space(language).lower()
+
+    if formatted_language in supported_languages:
+        with open('text_files/language.txt', 'w', encoding='utf-8') as file:
+            file.write(formatted_language)
         
-        return f"Changed language to {language}."
+        return f"Changed language to {formatted_language}."
     else:
-        return f"{language} is not supported.\nSupported Languages:\n{supported_languages}"
+        return f"{formatted_language} is not supported.\nSupported Languages:\n{supported_languages}"
 
 # Define a function to handle commands
 def handle_command(user_command, *args):
@@ -159,7 +161,7 @@ def handle_command(user_command, *args):
     elif command == "restart":
         return reset_logs()
     elif command == "change_language":
-        return change_language()
+        return change_language(" ".join(args))
     else:
         return "Command Not Found."
 

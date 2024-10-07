@@ -6,3 +6,4 @@ text_files/current_debug_log.txt
 /.vscode
 /__pycache__
 temp.wav
+/text_files

@@ -4,6 +4,7 @@ set default playback to cable a
 set default output to cable a
 '''
 
+# TODO: Make custom snapchat messages optional
 # Character name is "〜NOVA〜"
 
 # Import necessary libraries and initialize debugging
@@ -38,15 +39,14 @@ try:
     import pyautogui
     import keyboard
     import json
-    from googletrans import Translator
-    debug.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard, json, subprocess, sounddevice, soundfile, librosa, googletrans")
+    from translate import Translator
+    debug.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard, json, subprocess, googletrans")
 except ImportError as e:
     # Prints an error message if a library cannot be imported
     osc_client.send_message("/chatbox/input", [str(e), True])
     debug.write("ERROR", str(e))
 
 audio_device_index = 6 # The index of the audio output device
-translator = Translator()
 
 try:
     with open('var/mood.txt', 'r') as file:
@@ -140,7 +140,7 @@ history = [
     {"role": "assistant", "content": "Hii,"},
 ]
 
-with open('text_files\prompts\snapchat_system_prompt.txt', 'r') as file:
+with open('text_files/prompts/snapchat_system_prompt.txt', 'r') as file:
     snapchat_system_prompt = file.read()
 
 snapchat_history=[
@@ -161,10 +161,10 @@ def translate_text(text):
     Take text and translate it based on language.txt
     """
 
-    with open('text_files\language.txt', 'r') as file:
+    with open('text_files/language.txt', 'r') as file:
         language = file.read()
-    
-    translated_text = translator.translate(text, dest=language)
+
+    translator = Translator(to_lang=language)
 
     if language == "en": # English
         for voice in voices:
@@ -173,21 +173,49 @@ def translate_text(text):
                 engine.setProperty('voice', voice.id)
                 break
     elif language == "de": # German
-        pass
+        for voice in voices:
+            # Set the voice to Hedda for pyttsx3
+            if "Hedda" in voice.name:
+                engine.setProperty('voice', voice.id)
+                break
     elif language == "fr": # French
-        pass
+        for voice in voices:
+            # Set the voice to Hortense for pyttsx3
+            if "Hortense" in voice.name:
+                engine.setProperty('voice', voice.id)
+                break
     elif language == "it": # Italian
-        pass
-    elif language == "pt-PT": # Portuguese
-        pass
+        for voice in voices:
+            # Set the voice to Elsa for pyttsx3
+            if "Elsa" in voice.name:
+                engine.setProperty('voice', voice.id)
+                break
+    elif language == "pt-BR": # Portuguese
+        for voice in voices:
+            # Set the voice to Maria for pyttsx3
+            if "Maria" in voice.name:
+                engine.setProperty('voice', voice.id)
+                break
     elif language == "es": # Spanish
-        pass
-    elif language == "hi": # Hindi
-        pass
-    elif language == "th": # Thai
-        pass
+        for voice in voices:
+            # Set the voice to Sabina for pyttsx3
+            if "Sabina" in voice.name:
+                engine.setProperty('voice', voice.id)
+                break
+    elif language == 'ko': # Korean
+        for voice in voices:
+            # Set the voice to Heami for pyttsx3
+            if "Heami" in voice.name:
+                engine.setProperty('voice', voice.id)
+                break
+    else:
+        for voice in voices:
+            # Set the voice to Zira for pyttsx3
+            if "Zira" in voice.name:
+                engine.setProperty('voice', voice.id)
+                break
 
-    return translated_text.text
+    return translator.translate(text)
 
 def send_message_snapchat(message):
     """
@@ -598,6 +626,7 @@ while True:
                 sentence_chunks = chunk_text(buffer)
                 while len(sentence_chunks) > 1:
                     sentence = sentence_chunks.pop(0)
+                    sentence = translate_text(sentence)
                     full_response += f" {sentence}"
                     delete_file("output.wav")
                     engine.save_to_file(sentence, "output.wav")
@@ -611,6 +640,7 @@ while True:
         # Process any remaining text after the stream ends
         if buffer:
             osc_client.send_message("/chatbox/typing", True)
+            buffer = translate_text(buffer)
             full_response += f" {buffer}"
             delete_file("output.wav")
             engine.save_to_file(buffer, "output.wav")
