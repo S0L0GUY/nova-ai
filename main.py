@@ -38,13 +38,15 @@ try:
     import pyautogui
     import keyboard
     import json
-    debug.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard, json, subprocess, sounddevice, soundfile, librosa")
+    from googletrans import Translator
+    debug.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard, json, subprocess, sounddevice, soundfile, librosa, googletrans")
 except ImportError as e:
     # Prints an error message if a library cannot be imported
     osc_client.send_message("/chatbox/input", [str(e), True])
     debug.write("ERROR", str(e))
 
 audio_device_index = 6 # The index of the audio output device
+translator = Translator()
 
 try:
     with open('var/mood.txt', 'r') as file:
@@ -94,12 +96,6 @@ engine = pyttsx3.init()
 engine.setProperty('rate', 200)  # Speed of speech
 engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
 voices = engine.getProperty('voices')
-
-for voice in voices:
-    # Set the voice to Zira for pyttsx3
-    if "Zira" in voice.name:
-        engine.setProperty('voice', voice.id)
-        break
 
 # Whisper models include: tiny, base, small, medium, large
 model = whisper.load_model("base") # Load Whisper model
@@ -153,6 +149,45 @@ snapchat_history=[
 
 with open('history.json', 'w') as file:
     json.dump(history, file, indent=4)
+
+def translate_text(text):
+    """
+    Args:
+        text (string): The text that you want to translate.
+
+    Returns:
+        string: The translated text.
+
+    Take text and translate it based on language.txt
+    """
+
+    with open('text_files\language.txt', 'r') as file:
+        language = file.read()
+    
+    translated_text = translator.translate(text, dest=language)
+
+    if language == "en": # English
+        for voice in voices:
+            # Set the voice to Zira for pyttsx3
+            if "Zira" in voice.name:
+                engine.setProperty('voice', voice.id)
+                break
+    elif language == "de": # German
+        pass
+    elif language == "fr": # French
+        pass
+    elif language == "it": # Italian
+        pass
+    elif language == "pt-PT": # Portuguese
+        pass
+    elif language == "es": # Spanish
+        pass
+    elif language == "hi": # Hindi
+        pass
+    elif language == "th": # Thai
+        pass
+
+    return translated_text.text
 
 def send_message_snapchat(message):
     """
