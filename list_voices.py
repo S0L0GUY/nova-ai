@@ -1,7 +1,7 @@
 import pyttsx3
 
 '''
-List all of the voices avalable for pyttsx3 on this system.
+List all of the voices available for pyttsx3 on this system.
 '''
 
 engine = pyttsx3.init()

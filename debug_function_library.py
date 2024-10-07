@@ -12,7 +12,7 @@ class Debug:
             log_type (string): The type of message, e.g: ERROR, IMPORT.
             message (string): The message to log.
 
-        Log a message to both the termanal, alltime_debug_log.txt, and current_debug_log.txt.
+        Log a message to both the terminal, alltime_debug_log.txt, and current_debug_log.txt.
         """
         # Prints the log to the terminal
         log_message = f'{get_time()} {log_type}: {message}'
@@ -33,6 +33,6 @@ class Debug:
 
     @staticmethod
     def clear():
-        """Delete the contence of current_debug_log.txt"""        
+        """Delete the content in current_debug_log.txt"""        
         with open('text_files/current_debug_log.txt', 'w', encoding='utf-8') as file:
             file.write('')

@@ -16,7 +16,7 @@ def add_message(message):
         message (string): The message to add to the history.
 
     Returns:
-        string: Sucsess message.
+        string: Success message.
 
     Add a message as "user" to history.json.
     """    
@@ -46,7 +46,7 @@ def mood():
 def logs():
     """
     Returns:
-        string: The contence of history.json as a string.
+        string: The content of history.json as a string.
 
     Look at history.json, format it as a string, and return it.
     """    
@@ -59,7 +59,7 @@ def status():
     Returns:
         string: "Server is operational"
 
-    Return a message indecating that the server is online and ready.
+    Return a message indicating that the server is online and ready.
     """    
     return "Server is operational"
 
@@ -80,9 +80,9 @@ def remove_leading_space(s):
 def reset_logs():
     """
     Returns:
-        string: Sucsess message.
+        string: Success message.
 
-    Reset the logs in history.json to the origonal state and return a sucsess message.
+    Reset the logs in history.json to the original state and return a success message.
     """    
 
     mood_prompts = {
