@@ -71,6 +71,9 @@ def debug_write(log_type, message):
 with open('bad_words.json', 'r') as file:
     bad_words = json.load(file)
 
+with open('cool_font.json', 'r') as file:
+    font_map = json.load(file)
+
 # Initialize pyttsx3 and set properties
 engine = pyttsx3.init()
 engine.setProperty('rate', 200)  # Speed of speech
@@ -317,7 +320,8 @@ def type_in_chat(message):
 
     Type a message into Nova's VR Chat game using OSC
     """    
-    osc_client.send_message("/chatbox/input", [message, True])
+    final_message = ''.join(font_map.get(char, char) for char in message)
+    osc_client.send_message("/chatbox/input", [final_message, True])
 
 type_in_chat("System Loading...")
 
