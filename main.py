@@ -68,28 +68,8 @@ def debug_write(log_type, message):
     else:
         debug.write(log_type, "Therapy Mode Block")
 
-bad_words = [
-    "fuck",
-    "fucking",
-    "nigger",
-    "faggot",
-    "bitch",
-    "hoe",
-    "asshole",
-    "bastard",
-    "motherfucker",
-    "fucker",
-    "cunt",
-    "shit",
-    "nigga",
-    "pussy",
-    "dick",
-    "slut",
-    "cock",
-    "retard",
-    "tit",
-    "sex",
-]
+with open('bad_words.json', 'r') as file:
+    bad_words = json.load(file)
 
 # Initialize pyttsx3 and set properties
 engine = pyttsx3.init()
@@ -217,13 +197,14 @@ def translate_text(text):
 
     return translator.translate(text)
 
-def send_message_snapchat(message):
+def send_message_snapchat(message, ai_generated=False):
     """
     Args:
         message (string): The message that is going to be sent to snapchat.
+        ai_generated (bool, optional): Defines weather the response is going to be run though AI or not. Defaults to False.
 
-    Input and send a message to Snapchat with pyautogui and text generation with lmstudios
-    """    
+    Input and send a message to Snapchat with pyautogui and text generation with lmstudios or just normal messages that are not run though AI.
+    """  
     # Type to the VR Chat textbox saying that the message was flagged
     flagged_message = "🚩MESSAGE FLAGGED🚩\nSending message to creator..."
     type_in_chat(flagged_message)
@@ -233,30 +214,33 @@ def send_message_snapchat(message):
     now = datetime.now()
     date = now.strftime("%m/%d/%Y %I:%M %p")
 
-    # Append the message to Snapchat
-    snapchat_history.append({"role": "user", "content": message})
+    if ai_generated:
+        # Append the message to Snapchat
+        snapchat_history.append({"role": "user", "content": message})
 
-    # Type the heder
-    pyautogui.typewrite(f"~~~~{date}~~~~")
-    pyautogui.press("enter")
+        # Type the heder
+        pyautogui.typewrite(f"~~~~{date}~~~~")
+        pyautogui.press("enter")
 
-    debug.write("SYSTEM", "Generating message for Snapchat.")
-    new_message = {"role": "assistant", "content": ""}
+        debug.write("SYSTEM", "Generating message for Snapchat.")
+        new_message = {"role": "assistant", "content": ""}
 
-    # Create a response with AI
-    completion = openai_client.chat.completions.create(
-        model="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
-        messages=snapchat_history,
-        temperature=0.2,
-        stream=True,
-    )
+        # Create a response with AI
+        completion = openai_client.chat.completions.create(
+            model="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
+            messages=snapchat_history,
+            temperature=0.2,
+            stream=True,
+        )
     
-    for chunk in completion:
-        if chunk.choices[0].delta.content:
-            new_message["content"] += chunk.choices[0].delta.content
+        for chunk in completion:
+            if chunk.choices[0].delta.content:
+                new_message["content"] += chunk.choices[0].delta.content
 
-    pyautogui.typewrite(new_message["content"])
-    snapchat_history.append(new_message)
+        pyautogui.typewrite(new_message["content"])
+        snapchat_history.append(new_message)
+    else:
+        pyautogui.typewrite(message)
 
     keyboard.press_and_release("enter")
 
