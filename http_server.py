@@ -3,12 +3,53 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from datetime import datetime
 import json
 import urllib.parse
+import wave
+import pyaudio
 
 # http://192.168.0.19:8080/status
 # http://192.168.0.19:8080/add_message/This%20is%20a%20test
 # http://192.168.0.19:8080/logs
 
 # TODO: Make sound effect thingy
+
+audio_output_index = 6 # The index of the audio output device (VB-Audio Cable B)
+
+def play_audio_file(sound, output_device_index=audio_output_index):
+    """
+    Args:
+        file_path (string): The path to the audio file.
+        output_device_index (integer, optional): The index of the audio device to play to. Defaults to None (default device).
+
+    Plays the specified audio file directly to the output device.
+    """
+
+    # TODO: Make a list of playable sounds
+
+    file_path = "" # TODO: Make this change depending on what the user inputs
+
+    wf = wave.open(file_path, 'rb')
+    p = pyaudio.PyAudio()
+
+    # Open the audio stream
+    stream = p.open(
+        format=p.get_format_from_width(wf.getsampwidth()),
+        channels=wf.getnchannels(),
+        rate=wf.getframerate(),
+        output=True,
+        output_device_index=output_device_index
+    )
+
+    # Read and play audio data
+    data = wf.readframes(1024)
+    while data:
+        stream.write(data)
+        data = wf.readframes(1024)
+
+    # Cleanup
+    stream.stop_stream()
+    stream.close()
+    wf.close()
+    p.terminate()
 
 def add_message(message):
     """

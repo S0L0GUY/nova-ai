@@ -4,15 +4,15 @@ set default playback to cable a
 set default output to cable a
 '''
 
-# TODO: Make custom snapchat messages optional
 # Character name is "〜NOVA〜"
 
-# Import necessary libraries and initialize debugging
+# Import and initialize debugging
 from debug_function_library import Debug as debug
 debug.clear()
 debug.write("SYSTEM", "Program started")
 debug.write("IMPORT", "Debug imported")
 
+# Import and initialize OSC client
 from pythonosc import udp_client
 debug.write("IMPORT", "pythonosc imported")
 
@@ -23,7 +23,7 @@ osc_client = udp_client.SimpleUDPClient(local_ip, port)
 
 osc_client.send_message("/chatbox/input", ["Program starting...", True])
 
-# Import all necessary library's
+# Import all necessary dependencies
 try:
     from openai import OpenAI
     import os
@@ -46,7 +46,7 @@ except ImportError as e:
     osc_client.send_message("/chatbox/input", [str(e), True])
     debug.write("ERROR", str(e))
 
-audio_device_index = 6 # The index of the audio output device
+audio_output_index = 6 # The index of the audio output device (VB-Audio Cable B)
 
 try:
     with open('var/mood.txt', 'r') as file:
@@ -54,19 +54,16 @@ try:
         mood = file.read()
 except FileNotFoundError:
     debug.write("ERROR", "The file 'var/mood.txt' was not found.")
+    osc_client.send_message("/chatbox/input", ["Mood file not found", True])
 except IOError:
     debug.write("ERROR", "An I/O error occurred while trying to read the file.")
+    osc_client.send_message("/chatbox/input", ["I/O Error", True])
 except Exception as e:
     debug.write("ERROR", f"An exception error has occurred: {e}")
+    osc_client.send_message("/chatbox/input", [e, True])
 
 if not mood:
     mood = "normal"
-
-def debug_write(log_type, message):
-    if mood != "therapy":
-        debug.write(log_type, message)
-    else:
-        debug.write(log_type, "Therapy Mode Block")
 
 with open('bad_words.json', 'r') as file:
     bad_words = json.load(file)
@@ -132,6 +129,19 @@ snapchat_history=[
 
 with open('history.json', 'w') as file:
     json.dump(history, file, indent=4)
+
+def debug_write(log_type, message):
+    """
+    Args:
+        log_type (string): The type of message, e.g: ERROR, IMPORT.
+        message (string): The message to log.
+
+    Log a message to both the terminal, alltime_debug_log.txt, and current_debug_log.txt.
+    """
+    if mood != "therapy":
+        debug.write(log_type, message)
+    else:
+        debug.write(log_type, "Therapy Mode Block")
 
 def translate_text(text):
     """
@@ -249,7 +259,7 @@ def send_message_snapchat(message, ai_generated=False):
 
     debug.write("SNAPCHAT", new_message["content"])
 
-def play_audio_file(file_path, output_device_index=audio_device_index):
+def play_audio_file(file_path, output_device_index=audio_output_index):
     """
     Args:
         file_path (string): The path to the audio file.
@@ -281,11 +291,11 @@ def play_audio_file(file_path, output_device_index=audio_device_index):
     wf.close()
     p.terminate()
 
-def play_tts(output_file, output_device_index=audio_device_index):
+def play_tts(output_file, output_device_index=audio_output_index):
     """
     Args:
         output_file (string): The path to the output location
-        output_device_index (integer, optional): The index of the audio device that pyttsx3 plays to. Defaults to audio_device_index.
+        output_device_index (integer, optional): The index of the audio device that pyttsx3 plays to. Defaults to audio_output_index.
 
     Create a output based on the input and play it to an audio's index.
     """
@@ -322,8 +332,6 @@ def type_in_chat(message):
     """    
     final_message = ''.join(font_map.get(char, char) for char in message)
     osc_client.send_message("/chatbox/input", [final_message, True])
-
-type_in_chat("System Loading...")
 
 def get_speech_input():
     """
@@ -414,9 +422,6 @@ def delete_file(path):
         os.remove(path)
     else:
         return
-
-delete_file("output.wav")
-delete_file("temp.wav")
 
 def restart_program():
     """Restart the current program."""
@@ -571,6 +576,12 @@ def ai_system_command_catcher(ai_input):
             file.write('pleasing')
         send_message_snapchat("PLEASING MODE CALLED BY ~NOVA~")
         restart_program()
+
+type_in_chat("System Loading...")
+
+# Delete temporary files.
+delete_file("output.wav")
+delete_file("temp.wav")
 
 send_message_snapchat(F"PROGRAM STARTED IN {mood.upper()} MODE")
 
