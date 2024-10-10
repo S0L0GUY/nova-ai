@@ -5,6 +5,7 @@ import json
 import urllib.parse
 import wave
 import pyaudio
+import os
 
 # http://192.168.0.19:8080/status
 # http://192.168.0.19:8080/add_message/This%20is%20a%20test
@@ -25,7 +26,14 @@ def play_audio_file(sound, output_device_index=audio_output_index):
 
     # TODO: Make a list of playable sounds
 
-    file_path = "" # TODO: Make this change depending on what the user inputs
+    directory = 'audio_files'
+    file_list = []
+
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            file_list.append(os.path.join(root, file))
+
+    file_path = "" # TODO: Assign the file path to what the user selects
 
     wf = wave.open(file_path, 'rb')
     p = pyaudio.PyAudio()
