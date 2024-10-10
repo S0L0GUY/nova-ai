@@ -65,7 +65,7 @@ except Exception as e:
 if not mood:
     mood = "normal"
 
-with open('bad_words.json', 'r') as file:
+with open('var/bad_words.json', 'r') as file:
     bad_words = json.load(file)
 
 # Initialize pyttsx3 and set properties
@@ -106,15 +106,16 @@ system_prompt = f"{system_prompt} \n {additional_system_prompt}" # Put the syste
 
 now = datetime.now()
 
+with open('var/history.json', 'r') as file:
+    # Load additional system prompt
+    history = file.read() 
+
+history = [message for message in history if message["role"] != "system"]
+
 history = [
     {"role": "system", "content": system_prompt},
     {"role": "system", "content": f"Today is {now.strftime("%Y-%m-%d")}"},
     {"role": "user", "content": "Hey"},
-    {"role": "assistant", "content": "Hi, im Nova."},
-    {"role": "user", "content": "Are you a real person?"},
-    {"role": "assistant", "content": "Yea"},
-    {"role": "user", "content": "Ok, so introduce yourself to me."},
-    {"role": "assistant", "content": "Hii,"},
 ]
 
 with open('text_files/prompts/snapchat_system_prompt.txt', 'r') as file:
@@ -650,7 +651,7 @@ while True:
         osc_client.send_message("/chatbox/typing", False)
 
         # Save history to json
-        with open('history.json', 'w') as file:
+        with open('var/history.json', 'w') as file:
             json.dump(history, file, indent=4)
 
         # Gets the users voice input
@@ -659,13 +660,13 @@ while True:
             user_input = get_speech_input()
 
         # Load history from json
-        with open('history.json', 'r') as file:
+        with open('var/history.json', 'r') as file:
             history = json.load(file)
 
         history.append({"role": "user", "content": user_input})
 
         # Save history to json
-        with open('history.json', 'w') as file:
+        with open('var/history.json', 'w') as file:
             json.dump(history, file, indent=4)
 
         matching_words = find_matching_words(bad_words, user_input.lower())

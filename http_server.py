@@ -74,7 +74,7 @@ def add_message(message):
 
     history.append({"role": "user", "content": message})
 
-    with open('history.json', 'w') as file:
+    with open('var/history.json', 'w') as file:
         json.dump(history, file, indent=4)
 
     return f"Added '{message}' to history."
