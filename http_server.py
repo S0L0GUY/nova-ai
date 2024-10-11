@@ -7,9 +7,9 @@ import wave
 import pyaudio
 import os
 
-# http://192.168.0.21:8080/status
-# http://192.168.0.21:8080/add_message/This%20is%20a%20test
-# http://192.168.0.21:8080/logs
+# http://192.168.0.19:8080/status
+# http://192.168.0.19:8080/add_message/This%20is%20a%20test
+# http://192.168.0.19:8080/logs
 
 # TODO: Make sound effect thingy
 

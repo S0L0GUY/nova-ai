@@ -17,7 +17,7 @@ from pythonosc import udp_client
 debug.write("IMPORT", "pythonosc imported")
 
 # Set up OSC for chat and movement
-local_ip = "192.168.0.21" # Your computers local IP
+local_ip = "192.168.0.19" # Your computers local IP
 port = 9000 # VR Chat port, 9000 is the default
 osc_client = udp_client.SimpleUDPClient(local_ip, port)
 
@@ -250,12 +250,12 @@ def send_message_snapchat(message, ai_generated=False):
 
         pyautogui.typewrite(new_message["content"])
         snapchat_history.append(new_message)
-        debug.write("SNAPCHAT", new_message["content"])
     else:
         pyautogui.typewrite(message)
-        debug.write("SNAPCHAT", message)
 
     keyboard.press_and_release("enter")
+
+    debug.write("SNAPCHAT", new_message["content"])
 
 def play_audio_file(file_path, output_device_index=audio_output_index):
     """
@@ -622,13 +622,13 @@ while True:
                 sentence_chunks = chunk_text(buffer)
                 while len(sentence_chunks) > 1:
                     sentence = sentence_chunks.pop(0)
-                    translated_sentence = translate_text(sentence)
-                    full_response += f" {translated_sentence}"
+                    sentence = translate_text(sentence)
+                    full_response += f" {sentence}"
                     delete_file("output.wav")
-                    engine.save_to_file(translated_sentence, "output.wav")
+                    engine.save_to_file(sentence, "output.wav")
                     engine.runAndWait()
-                    debug_write("AI", translated_sentence)
-                    type_in_chat(translated_sentence)
+                    debug_write("AI", sentence)
+                    type_in_chat(sentence)
                     play_tts("output.wav")
                     ai_system_command_catcher(sentence)
                 buffer = sentence_chunks[0]  # Keep the remaining text in the buffer
@@ -636,13 +636,13 @@ while True:
         # Process any remaining text after the stream ends
         if buffer:
             osc_client.send_message("/chatbox/typing", True)
-            translated_buffer = translate_text(buffer)
-            full_response += f" {translated_buffer}"
+            buffer = translate_text(buffer)
+            full_response += f" {buffer}"
             delete_file("output.wav")
-            engine.save_to_file(translated_buffer, "output.wav")
+            engine.save_to_file(buffer, "output.wav")
             engine.runAndWait()
-            debug_write("AI", translated_buffer)
-            type_in_chat(translated_buffer)
+            debug_write("AI", buffer)
+            type_in_chat(buffer)
             play_tts("output.wav")
             ai_system_command_catcher(buffer)
             new_message["content"] = full_response  # Populate the new_message with the remaining text
