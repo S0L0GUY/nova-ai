@@ -17,7 +17,7 @@ from pythonosc import udp_client
 debug.write("IMPORT", "pythonosc imported")
 
 # Set up OSC for chat and movement
-local_ip = "192.168.0.19" # Your computers local IP
+local_ip = "192.168.0.21" # Your computers local IP
 port = 9000 # VR Chat port, 9000 is the default
 osc_client = udp_client.SimpleUDPClient(local_ip, port)
 
@@ -105,12 +105,6 @@ with open('text_files/prompts/additional_system_prompt.txt', 'r') as file:
 system_prompt = f"{system_prompt} \n {additional_system_prompt}" # Put the system prompt together
 
 now = datetime.now()
-
-with open('var/history.json', 'r') as file:
-    # Load additional system prompt
-    history = file.read() 
-
-history = [message for message in history if message["role"] != "system"]
 
 history = [
     {"role": "system", "content": system_prompt},
@@ -250,12 +244,12 @@ def send_message_snapchat(message, ai_generated=False):
 
         pyautogui.typewrite(new_message["content"])
         snapchat_history.append(new_message)
+        debug.write("SNAPCHAT", new_message["content"])
     else:
         pyautogui.typewrite(message)
+        debug.write("SNAPCHAT", message)
 
     keyboard.press_and_release("enter")
-
-    debug.write("SNAPCHAT", new_message["content"])
 
 def play_audio_file(file_path, output_device_index=audio_output_index):
     """
