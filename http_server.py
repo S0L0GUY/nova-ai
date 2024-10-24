@@ -13,9 +13,9 @@ import os
 
 # TODO: Make sound effect thingy
 
-audio_output_index = 6 # The index of the audio output device (VB-Audio Cable B)
+AUDIO_OUTPUT_INDEX = 7 # The index of the audio output device (VB-Audio Cable B)
 
-def play_audio_file(sound, output_device_index=audio_output_index):
+def play_audio_file(sound, output_device_index=AUDIO_OUTPUT_INDEX):
     """
     Args:
         file_path (string): The path to the audio file.

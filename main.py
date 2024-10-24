@@ -6,24 +6,24 @@ set default output to cable a
 
 # Character name is "〜NOVA〜"
 
-# Import and initialize debugging
+# import and initialize debugging
 from debug_function_library import Debug as debug
 debug.clear()
 debug.write("SYSTEM", "Program started")
-debug.write("IMPORT", "Debug imported")
+debug.write("import", "Debug imported")
 
-# Import and initialize OSC client
+# import and initialize OSC client
 from pythonosc import udp_client
-debug.write("IMPORT", "pythonosc imported")
+debug.write("import", "pythonosc imported")
 
 # Set up OSC for chat and movement
-local_ip = "192.168.0.21" # Your computers local IP
-port = 9000 # VR Chat port, 9000 is the default
-osc_client = udp_client.SimpleUDPClient(local_ip, port)
+LOCAL_IP = "192.168.0.17" # Your computers local IP
+VRC_PORT = 9000 # VR Chat VRC_PORT, 9000 is the default
+osc_client = udp_client.SimpleUDPClient(LOCAL_IP, VRC_PORT)
 
 osc_client.send_message("/chatbox/input", ["Program starting...", True])
 
-# Import all necessary dependencies
+# import all necessary dependencies
 try:
     from openai import OpenAI
     import os
@@ -40,13 +40,13 @@ try:
     import keyboard
     import json
     from translate import Translator
-    debug.write("IMPORT", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard, json, subprocess, googletrans")
+    debug.write("import", "Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub, datetime, pyautogui, keyboard, json, subprocess, googletrans")
 except ImportError as e:
     # Prints an error message if a library cannot be imported
     osc_client.send_message("/chatbox/input", [str(e), True])
     debug.write("ERROR", str(e))
 
-audio_output_index = 6 # The index of the audio output device (VB-Audio Cable B)
+AUDIO_OUTPUT_INDEX = 6 # The index of the audio output device (VB-Audio Cable B)
 
 try:
     with open('var/mood.txt', 'r') as file:
@@ -125,7 +125,7 @@ with open('history.json', 'w') as file:
 def debug_write(log_type, message):
     """
     Args:
-        log_type (string): The type of message, e.g: ERROR, IMPORT.
+        log_type (string): The type of message, e.g: ERROR, import.
         message (string): The message to log.
 
     Log a message to both the terminal, alltime_debug_log.txt, and current_debug_log.txt.
@@ -175,7 +175,7 @@ def translate_text(text):
             if "Elsa" in voice.name:
                 engine.setProperty('voice', voice.id)
                 break
-    elif language == "pt-BR": # Portuguese
+    elif language == "pt-BR": # VRC_PORTuguese
         for voice in voices:
             # Set the voice to Maria for pyttsx3
             if "Maria" in voice.name:
@@ -251,7 +251,7 @@ def send_message_snapchat(message, ai_generated=False):
 
     keyboard.press_and_release("enter")
 
-def play_audio_file(file_path, output_device_index=audio_output_index):
+def play_audio_file(file_path, output_device_index=AUDIO_OUTPUT_INDEX):
     """
     Args:
         file_path (string): The path to the audio file.
@@ -283,11 +283,11 @@ def play_audio_file(file_path, output_device_index=audio_output_index):
     wf.close()
     p.terminate()
 
-def play_tts(output_file, output_device_index=audio_output_index):
+def play_tts(output_file, output_device_index=AUDIO_OUTPUT_INDEX):
     """
     Args:
         output_file (string): The path to the output location
-        output_device_index (integer, optional): The index of the audio device that pyttsx3 plays to. Defaults to audio_output_index.
+        output_device_index (integer, optional): The index of the audio device that pyttsx3 plays to. Defaults to AUDIO_OUTPUT_INDEX.
 
     Create a output based on the input and play it to an audio's index.
     """
@@ -612,8 +612,21 @@ while True:
             osc_client.send_message("/chatbox/typing", True)
             if chunk.choices[0].delta.content:
                 buffer += chunk.choices[0].delta.content
+
+                ##################################################################
+                # Process each chunk of text to break it into words
+                words = re.findall(r'\S+|\s+', buffer)
+        
+                for word in words[:-1]:  # Process all words except the last one
+                    type_in_chat(word)
+        
+                # Keep the last word (potentially incomplete) in the buffer
+                buffer = words[-1] if words else ""
+
                 # Process each chunk of text to break it into sentences
                 sentence_chunks = chunk_text(buffer)
+                ##################################################################
+
                 while len(sentence_chunks) > 1:
                     sentence = sentence_chunks.pop(0)
                     sentence = translate_text(sentence)
@@ -626,7 +639,6 @@ while True:
                     play_tts("output.wav")
                     ai_system_command_catcher(sentence)
                 buffer = sentence_chunks[0]  # Keep the remaining text in the buffer
-                type_in_chat(buffer) # Live type
 
         # Process any remaining text after the stream ends
         if buffer:
