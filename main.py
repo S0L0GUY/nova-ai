@@ -622,10 +622,11 @@ while True:
                     engine.save_to_file(sentence, "output.wav")
                     engine.runAndWait()
                     debug_write("AI", sentence)
-                    type_in_chat(sentence)
+                    # type_in_chat(sentence)
                     play_tts("output.wav")
                     ai_system_command_catcher(sentence)
                 buffer = sentence_chunks[0]  # Keep the remaining text in the buffer
+                type_in_chat(buffer) # Live type
 
         # Process any remaining text after the stream ends
         if buffer:
