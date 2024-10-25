@@ -17,7 +17,7 @@ from pythonosc import udp_client
 debug.write("import", "pythonosc imported")
 
 # Set up OSC for chat and movement
-LOCAL_IP = "192.168.0.17" # Your computers local IP
+LOCAL_IP = "192.168.0.21" # Your computers local IP
 VRC_PORT = 9000 # VR Chat VRC_PORT, 9000 is the default
 osc_client = udp_client.SimpleUDPClient(LOCAL_IP, VRC_PORT)
 
@@ -46,7 +46,7 @@ except ImportError as e:
     osc_client.send_message("/chatbox/input", [str(e), True])
     debug.write("ERROR", str(e))
 
-AUDIO_OUTPUT_INDEX = 6 # The index of the audio output device (VB-Audio Cable B)
+AUDIO_OUTPUT_INDEX = 7 # The index of the audio output device (VB-Audio Cable B)
 
 try:
     with open('var/mood.txt', 'r') as file:
@@ -612,21 +612,8 @@ while True:
             osc_client.send_message("/chatbox/typing", True)
             if chunk.choices[0].delta.content:
                 buffer += chunk.choices[0].delta.content
-
-                ##################################################################
-                # Process each chunk of text to break it into words
-                words = re.findall(r'\S+|\s+', buffer)
-        
-                for word in words[:-1]:  # Process all words except the last one
-                    type_in_chat(word)
-        
-                # Keep the last word (potentially incomplete) in the buffer
-                buffer = words[-1] if words else ""
-
                 # Process each chunk of text to break it into sentences
                 sentence_chunks = chunk_text(buffer)
-                ##################################################################
-
                 while len(sentence_chunks) > 1:
                     sentence = sentence_chunks.pop(0)
                     sentence = translate_text(sentence)
@@ -635,7 +622,7 @@ while True:
                     engine.save_to_file(sentence, "output.wav")
                     engine.runAndWait()
                     debug_write("AI", sentence)
-                    # type_in_chat(sentence)
+                    type_in_chat(sentence)
                     play_tts("output.wav")
                     ai_system_command_catcher(sentence)
                 buffer = sentence_chunks[0]  # Keep the remaining text in the buffer

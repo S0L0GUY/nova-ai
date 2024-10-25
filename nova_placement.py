@@ -2,7 +2,7 @@ from pythonosc import udp_client
 import time
 import os
 
-time.sleep(15)
+# time.sleep(15)
 
 # Set up OSC
 local_ip = "192.168.0.21" # Your computers local IP
