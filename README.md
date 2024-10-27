@@ -1,6 +1,6 @@
-# NOVA VRChat AI Assistant
+# NOVA AI
 
-Welcome to NOVA, a versatile VRChat AI assistant designed to interact with users in various moods and respond to voice commands. This README provides an overview of the script, its setup, and usage instructions.
+Welcome to NOVA, a dynamic AI assistant for VRChat, designed to interact with users in various moods and respond to voice commands. This README provides an overview of the script, setup instructions, and usage guidelines.
 
 ## Table of Contents
 
@@ -13,24 +13,17 @@ Welcome to NOVA, a versatile VRChat AI assistant designed to interact with users
 
 ## Overview
 
-NOVA is an AI assistant designed for VRChat. She integrates with OpenAI's API with LM Studio and uses Whisper for speech-to-text functionality. The script manages different moods, processes user input, and handles various commands to customize the assistant's behavior.
+NOVA is an AI assistant tailored for VRChat, integrating with OpenAI's API via LM Studio and utilizing Whisper for speech-to-text functionality. The script manages different moods, processes user input, and handles various commands to customize the assistant's behavior.
 
 ## Features
 
 - **Voice Commands**: Accepts voice commands to change moods, restart the program, and more.
 - **Moods**: Switches between different modes such as normal, argument, drunk, and more.
-- **Text-to-Speech**: Converts text responses into speech using pyttsx3.
+- **Text-to-Speech**: Converts text responses into speech using `pyttsx3`.
 - **Speech Recognition**: Transcribes user speech to text using Whisper.
 - **OpenAI Integration**: Utilizes OpenAI’s API with LM Studio for generating responses.
 
 ## Setup
-
-For reference, my computer hardware:
-- Intel Core 17-4790
-- NVIDIA GeForce GTX 1050Ti
-- 16 GB DDR3 RAM
-
-This means that the AI should really be able to run on anything that can have VR Chat and VS Code open at the same time, it will just mean that ~NOVA~ will run a little bit slower.
 
 ### Prerequisites
 
@@ -45,51 +38,57 @@ Ensure you have the following Python libraries installed:
 - `python-osc`
 - `pyaudio`
 
-You can install these dependencies using pip:
-
+Install these dependencies using pip:
 ```sh
 pip install openai pyttsx3 pyaudio whisper-openai pydub pyautogui keyboard python-osc
 ```
 
-Install LM studio [HERE](https://lmstudio.ai/). Once LM Studios is installed and set up, Navigate to the magnifying glass button and search for "
-lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF" and download whichever model runs on your system best. I personally use the "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf" model but you can get faster with some of the other models. After that, look on the left side of the screen for a logo that is just 2 arrows connected together pointing opposite directions, and click on it. This should bring you to the Local Inference Server page. It gets a little tricky here because these settings may very from system to system. To get ~NOVA~ to respond so fast on my system, I have the tokens to generate set to 250, and the CPU threads set to 14. I also set "Keep entire model in RAM" to on because why not. If you don't see any of these options they may be in dropdown menus or something. Now whenever you are ready to run ~NOVA~ your first step is to open this app, navigate to this page, and click the big green "Start Server" button.
+### LM Studio Setup
 
-Install any virtual audio cables, as long as there are 2 cables it will work. I used [Virtual Audio Cable A+B](https://shop.vb-audio.com/en/win-apps/12-vb-cable-ab.html?SubmitCurrency=1&id_currency=1) But this option is donationwhere so you have to pay for it. Any generic virtual audio cables will work as long as there are 2. I am going to call them cables A and B just for clarity's sake. As it says at the top of main.py, in VR Chat set your default mic to cable B, and in the audio control panel on Windows, set both your default input and output cables to cable A. This does make it so you cannot hear what ~NOVA~ is hearing or saying, so if you find a workaround then go for it.
+1. Install LM Studio [here](https://lmstudio.ai/).
+2. Search for "lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF" and download the appropriate model.
+3. Navigate to the Local Inference Server page and configure the settings:
+    - Tokens to generate: 250
+    - CPU threads: 14
+    - Enable "Keep entire model in RAM"
+4. Click the "Start Server" button.
 
-VR Chat can just run in the background, nothing special with it. You will need to set the input mic to audio cable B and set your computer's default output to cable A. I would suggest setting your AI's account to have an earmuff bubble. Set the outside sound level to 0. I set the cone to the max that I could but the actual bubble is at 35%. Also, enable OSC. Look for a tutorial on YouTube if you don't know how to do it.
+### Virtual Audio Cables
 
-For the actual code portion of this setup, it is really straightforward. As shown above, using your terminal, type in the pip statement with all of the dependencies listed. Take a look through all of the code and prompts to see how she works. That step is helpful because you will be able to better diagnose problems in the future. It also explains a little why she acts the way she does. You will find some comments saying things like "Your computers local IP" or "VR Chat port". Replace these with your system information. The IP needs to be your local IP so it will be the one that starts with 192.168.0.--. VR Chats port should stay the same. At this point, it would be a good time to set up the audio device index. In the "audio device indexes.py" file, run the script and look in the terminal. You're going to want to look for the first instance of "CABLE-B Input (VB-Audio Cable B" or whatever your B cable is called. Back in main.py, record the index of your audio device to the audio_device_index variable (replace 6 with your number).
+Install virtual audio cables with at least 2 cables. Example: [Virtual Audio Cable A+B](https://shop.vb-audio.com/en/win-apps/12-vb-cable-ab.html?SubmitCurrency=1&id_currency=1).
 
-When you are ready to run the program, have VR Chat and LM Studio running and booted to the correct places. Open the main.py file and run it. If the terminal looks like this after a minute then you know that your program worked.
+Configure VRChat and Windows audio settings:
+- VRChat default mic: Cable B
+- Windows default input/output: Cable A
 
-07:14:19 2024-08-27 SYSTEM: Program started
+### VRChat Configuration
 
-07:14:19 2024-08-27 IMPORT: Debug imported
+1. Set the input mic to audio cable B.
+2. Set the computer's default output to cable A.
+3. Enable OSC in VRChat settings.
 
-07:14:22 2024-08-27 IMPORT: Successfully imported openai, pyttsx3, os, time, pyaudio, pythonosc, re, wave, sys, whisper, numpy, pydub
+### Code Setup
 
-07:14:38 2024-08-27 AI: Hi!
+1. Install dependencies using the pip command above.
+2. Replace placeholders in the code with your system information (e.g., local IP, VRChat port).
+3. Set up the audio device index in `audio_device_indexes.py` and update `main.py`.
 
-07:14:39 2024-08-27 AI: I'm Nova.
+### Running the Program
 
-07:14:41 2024-08-27 AI: Nice to meet you in VR Chat.
-
-07:14:43 2024-08-27 AI: What brings you here today?
-
-If it does not look like this, and there is an error, paste the error into Chat GPT and ask for help.
+1. Start VRChat and LM Studio.
+2. Run `main.py` and check the terminal for successful startup messages.
 
 ## Adding Modes
 
-Adding modes is easy, you are going to want to first create the prompt (I usually ask chat GPT to do it). You don't want the prompt to mention things like her name or that she has other modes because that is explained in the additional system prompt. Create a new file called "(mood)_system_prompt.txt" so if you were making a mad mood, you would want to name it "mad_system_prompt.txt". Paste the system prompt into the file. Now locate the variable called "mood_prompts" and follow the format of the other entries. Add the comma at the end of the last entry and create a new entry. In my example it would look like `"mad": 'text_files/prompts/mad_system_prompt.txt'`. Now you're going to want to add the command so that a player can put her in the mood. In "main.py" locate the function called `command_catcher()`. You will want to scroll to the bottom of the function and add a new elif statement. I will usually just copy an old elif statement and replace it with the new data. For example, this is how I would fill out my new mode:
+1. Create a new system prompt file (e.g., `mad_system_prompt.txt`).
+2. Update the `mood_prompts` dictionary in the code.
+3. Add new commands in `command_catcher()` and `ai_system_command_catcher()`.
+4. Update the `additional_system_prompt.txt` file with the new mode details.
 
-```Python
-elif "activate mad mode" in user_input.lower():
-        debug_write("COMMAND CATCHER", "Mad Mode Called")
-        with open('var/mood.txt', 'w') as file:
-            file.write('mad')
-        restart_program()
-```
+## Development
 
-It is really straightforward. You are also going to want to do this for `ai_system_command_catcher()`. This function parses what the AI says for commands so you will want it to say "activate my mad mode now" instead of "activate mad mode".
+For development and troubleshooting, refer to the comments and documentation within the code. If you encounter errors, please contact me for help.
 
-Now look in the "additional_system_prompt.txt" file. You are going to want to look at the paragraph that is talking about its different modes. Make sure to add a reference to that paragraph. Also, it would be good to note the process of having her say her own commands. So take a look at the second Modes section in the "additional_system_prompt.txt" file. You are going to copy one of the entries and replace it with your information. For my example, I would enter "If you sense that the user wants you to enter mad mode, first confirm with them, then say exactly "activate my mad mode now"".
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
