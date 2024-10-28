@@ -693,24 +693,3 @@ while True:
             os.system('cd F:/USB/vr-ai-chatbot-main')
             os.system('python main.py')
             break
-
-'''
-            buffer += chunk.choices[0].delta.content
-            words = buffer.split()
-            buffer = ""
-            for word in words:
-                buffer += word + " "
-                sentence_chunks = chunk_text(buffer)
-                while len(sentence_chunks) > 1:
-                sentence = sentence_chunks.pop(0)
-                sentence = translate_text(sentence)
-                full_response += f" {sentence}"
-                delete_file("output.wav")
-                engine.save_to_file(sentence, "output.wav")
-                engine.runAndWait()
-                debug_write("AI", sentence)
-                type_in_chat(sentence)
-                play_tts("output.wav")
-                ai_system_command_catcher(sentence)
-                buffer = sentence_chunks[0] if sentence_chunks else ""
-'''
