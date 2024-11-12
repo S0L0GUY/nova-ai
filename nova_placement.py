@@ -1,3 +1,4 @@
+import constants as constant
 from pythonosc import udp_client
 import time
 import os
@@ -5,9 +6,7 @@ import os
 time.sleep(15)
 
 # Set up OSC
-local_ip = "192.168.0.195" # Your computers local IP
-port = 9000 # VR Chat port, 9000 is the default
-osc_client = udp_client.SimpleUDPClient(local_ip, port)
+osc_client = udp_client.SimpleUDPClient(constant.LOCAL_IP, constant.VRC_PORT)
 osc_client.send_message("/chatbox/input", ["Positioning...", True])
 
 ################################################################################################
@@ -16,18 +15,18 @@ world = "The Black Cat"
 position = "Downstairs Bar"
 ################################################################################################
 
-def move_forward(time):
-    osc_client.send_message("/input/MoveForward", 1)
+def move_forward(time, speed=1):
+    osc_client.send_message("/input/MoveForward", speed)
     time.sleep(time)
     osc_client.send_message("/input/MoveForward", 0)
 
-def look_right(time):
-    osc_client.send_message("/input/LookRight", 1)
+def look_right(time, speed=1):
+    osc_client.send_message("/input/LookRight", speed)
     time.sleep(time)
     osc_client.send_message("/input/LookRight", 0)
 
-def look_left(time):
-    osc_client.send_message("/input/LookLeft", 1)
+def look_left(time, speed=1):
+    osc_client.send_message("/input/LookLeft", speed)
     time.sleep(time)
     osc_client.send_message("/input/LookLeft", 0)
 

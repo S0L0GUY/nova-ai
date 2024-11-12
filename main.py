@@ -16,10 +16,11 @@ debug.write("import", "Debug imported")
 from pythonosc import udp_client
 debug.write("import", "pythonosc imported")
 
+import constants as constant
+debug.write("import", "constants imported")
+
 # Set up OSC for chat and movement
-LOCAL_IP = "192.168.0.195" # Your computers local IP
-VRC_PORT = 9000 # VR Chat VRC_PORT, 9000 is the default
-osc_client = udp_client.SimpleUDPClient(LOCAL_IP, VRC_PORT)
+osc_client = udp_client.SimpleUDPClient(constant.LOCAL_IP, constant.VRC_PORT)
 
 osc_client.send_message("/chatbox/input", ["Program starting...", True])
 
@@ -45,8 +46,6 @@ except ImportError as e:
     # Prints an error message if a library cannot be imported
     osc_client.send_message("/chatbox/input", [str(e), True])
     debug.write("ERROR", str(e))
-
-AUDIO_OUTPUT_INDEX = 7 # The index of the audio output device (VB-Audio Cable B)
 
 try:
     with open('var/mood.txt', 'r') as file:
@@ -251,7 +250,7 @@ def send_message_snapchat(message, ai_generated=False):
 
     keyboard.press_and_release("enter")
 
-def play_audio_file(file_path, output_device_index=AUDIO_OUTPUT_INDEX):
+def play_audio_file(file_path, output_device_index=constant.AUDIO_OUTPUT_INDEX):
     """
     Args:
         file_path (string): The path to the audio file.
@@ -283,7 +282,7 @@ def play_audio_file(file_path, output_device_index=AUDIO_OUTPUT_INDEX):
     wf.close()
     p.terminate()
 
-def play_tts(output_file, output_device_index=AUDIO_OUTPUT_INDEX):
+def play_tts(output_file, output_device_index=constant.AUDIO_OUTPUT_INDEX):
     """
     Args:
         output_file (string): The path to the output location
@@ -594,9 +593,9 @@ while True:
     try:
         # Creates model parameters
         completion = openai_client.chat.completions.create(
-            model="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
+            model=constant.MODEL_ID,
             messages=history,
-            temperature=0.5,
+            temperature=constant.LM_TEMPERATURE,
             stream=True,
         )
 
