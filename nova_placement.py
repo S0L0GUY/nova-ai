@@ -2,10 +2,10 @@ from pythonosc import udp_client
 import time
 import os
 
-# time.sleep(15)
+time.sleep(15)
 
 # Set up OSC
-local_ip = "192.168.0.21" # Your computers local IP
+local_ip = "192.168.0.195" # Your computers local IP
 port = 9000 # VR Chat port, 9000 is the default
 osc_client = udp_client.SimpleUDPClient(local_ip, port)
 osc_client.send_message("/chatbox/input", ["Positioning...", True])

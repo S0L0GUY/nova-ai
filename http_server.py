@@ -174,7 +174,7 @@ def reset_logs():
     return "Logs Cleared"
 
 def change_language(language):
-    supported_languages = {"en", "de", "fr", "it", "pt-PT", "es", "hi", "th", "ko"}
+    supported_languages = {"en", "de", "fr", "it", "pt-PT", "es", "hi", "th", "ko", "tr-TR"}
 
     formatted_language = remove_leading_space(language).lower()
 

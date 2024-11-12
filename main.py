@@ -17,7 +17,7 @@ from pythonosc import udp_client
 debug.write("import", "pythonosc imported")
 
 # Set up OSC for chat and movement
-LOCAL_IP = "192.168.0.21" # Your computers local IP
+LOCAL_IP = "192.168.0.195" # Your computers local IP
 VRC_PORT = 9000 # VR Chat VRC_PORT, 9000 is the default
 osc_client = udp_client.SimpleUDPClient(LOCAL_IP, VRC_PORT)
 
@@ -596,7 +596,7 @@ while True:
         completion = openai_client.chat.completions.create(
             model="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
             messages=history,
-            temperature=0.9,
+            temperature=0.5,
             stream=True,
         )
 
