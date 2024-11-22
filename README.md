@@ -7,9 +7,10 @@ Welcome to NOVA, a dynamic AI assistant for VRChat, designed to interact with us
 1. [Overview](#overview)
 2. [Features](#features)
 3. [Setup](#setup)
-4. [Usage](#usage)
+4. [Adding Modes](#adding-modes)
 5. [Development](#development)
-6. [License](#license)
+6. [Contributions](#contributions)
+7. [License](#license)
 
 ## Overview
 
@@ -88,6 +89,10 @@ Configure VRChat and Windows audio settings:
 ## Development
 
 For development and troubleshooting, refer to the comments and documentation within the code. If you encounter errors, please contact me for help.
+
+## Contributions
+
+[Evan Grinnell](https://github.com/S0L0GUY/NOVA-AI/commits?author=S0L0GUY)
 
 ## License
 
