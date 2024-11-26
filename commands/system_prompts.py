@@ -1,3 +1,6 @@
+from commands.mood import Mood
+
+mood = Mood()
 import os
 
 class prompt:
@@ -43,11 +46,15 @@ class prompt:
             str: The combined system prompt consisting of the mood prompt and the additional prompt.
         """
         
-        mood = mood.get()
+        current_mood = mood.get()
+        mood_path = self.get_mood_path(current_mood)
         
-        with open(self.get_mood_path(mood), 'r') as file:
+        with open(mood_path, 'r') as file:
             mood_prompt = file.read()
         
-        additional_prompt = self.get_mood_path('additional')
+        additional_path = self.get_mood_path('additional')
+        
+        with open(additional_path, 'r') as file:
+            additional_prompt = file.read()
         
         return f"{mood_prompt}\n{additional_prompt}"

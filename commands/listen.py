@@ -1,4 +1,4 @@
-import commands.vrchat as vrchat
+from commands.vrchat import vrchat
 from pydub import AudioSegment
 import pyaudio
 import whisper

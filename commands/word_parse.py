@@ -1,7 +1,7 @@
-import commands.snapchat as snapchat
-import commands.program as program
-import commands.vrchat as vrchat
-import commands.mood as mood
+from commands.snapchat import snapchat
+from commands.program import program
+from commands.vrchat import vrchat
+from commands.mood import mood
 import time
 import json
 import re

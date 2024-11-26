@@ -1,4 +1,4 @@
-import commands.vrchat as vrchat
+from commands.vrchat import vrchat
 import sys
 import os
 

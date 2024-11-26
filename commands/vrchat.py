@@ -1,10 +1,10 @@
-from pythonosc import udp_client
 import variable.constants as constant
+from pythonosc import udp_client
 
-class vrchat:
+class vrchat():
     def __init__(self):
         # Set up OSC for chat and movement
-        osc_client = udp_client.SimpleUDPClient(constant.LOCAL_IP, constant.VRC_PORT)
+        self.osc_client = udp_client.SimpleUDPClient(constant.LOCAL_IP, constant.VRC_PORT)
 
     def type_in_chat(self, message):
         """

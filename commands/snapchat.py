@@ -1,5 +1,5 @@
-import commands.system_prompts as system_prompts
-import commands.vrchat as vrchat
+from commands.system_prompts import prompt
+from commands.vrchat import vrchat
 from openai import OpenAI
 import pyautogui
 import datetime
@@ -9,7 +9,7 @@ class snapchat:
     def __init__(self):
         openai_client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
         
-        snapchat_system_prompt = system_prompts.get_system_prompt("snapchat")
+        snapchat_system_prompt = prompt.get_system_prompt("snapchat")
         
         snapchat_history=[
             {"role": "system", "content": snapchat_system_prompt},

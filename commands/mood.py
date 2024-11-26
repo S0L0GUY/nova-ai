@@ -6,7 +6,7 @@ class mood:
             str: The mood read from the file.
         """
 
-        with open('var/mood.txt', 'r') as file:
+        with open('variable/mood.txt', 'r') as file:
             mood = file.read()
             return mood
 
