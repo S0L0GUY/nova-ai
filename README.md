@@ -1,4 +1,4 @@
-# NOVA AI
+# 〜NOVA〜 AI
 
 Welcome to NOVA, a dynamic AI assistant for VRChat, designed to interact with users in various moods and respond to voice commands. This README provides an overview of the script, setup instructions, and usage guidelines.
 

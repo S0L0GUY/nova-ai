@@ -1,4 +1,4 @@
-import constants as constant
+import variable.constants as constant
 from pythonosc import udp_client
 import time
 import os
