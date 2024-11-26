@@ -92,7 +92,8 @@ For development and troubleshooting, refer to the comments and documentation wit
 
 ## Contributions
 
-[Evan Grinnell](https://github.com/S0L0GUY/NOVA-AI/commits?author=S0L0GUY)
+- [Evan Grinnell](https://github.com/S0L0GUY/NOVA-AI/commits?author=S0L0GUY)
+- [Duck Song](https://github.com/S0L0GUY/NOVA-AI/commits?author=DuckSong510)
 
 ## License
 
