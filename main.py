@@ -2,7 +2,9 @@ from classes.whisper import WhisperTranscriber
 from classes.system_prompt import SystemPrompt
 from classes.json_wrapper import JsonWrapper
 from classes.audio import AudioPlayer
+from classes.tts import TextToSpeech
 from classes.osc import VRChatOSC
+from constants import constant
 from openai import OpenAI
 import datetime
 import http_server
@@ -51,8 +53,67 @@ def chunk_text(text):
     chunks = re.split(r'(?<=[.,;:!?]) +', text)
     return chunks
 
-# Place ~NOVA~ *OPTIONAL*
+def find_matching_words(word_list, string_to_check):
+    """
+    Args:
+        word_list (list): All of the words that you want to detect.
+        string_to_check (): The string that you want to parse for words.
+
+    Returns:
+        boolean: Is there a word from the list in the string to check?
+
+    Parse the string to check for words in the list.
+    """    
+    return [word for word in word_list if word in string_to_check]
 
 # Main logic
 while True:
-    pass
+    # Creates model parameters
+    completion = openai_client.chat.completions.create(
+        model=constant.MODEL_ID,
+        messages=history,
+        temperature=constant.LM_TEMPERATURE,
+        stream=True,
+    )
+
+    new_message = {"role": "assistant", "content": ""}
+
+    osc.send_message("Thinking")
+    osc.set_typing_indicator(True)
+
+    buffer = ""
+    full_response = ""
+
+    for chunk in completion:
+        osc.set_typing_indicator(True)
+        if chunk.choices[0].delta.content:
+            buffer += chunk.choices[0].delta.content
+            sentence_chunks = chunk_text(buffer)
+            while len(sentence_chunks) > 1:
+                sentence = sentence_chunks.pop(0)
+                full_response += f" {sentence}"
+                TextToSpeech.play_tts(sentence)
+                osc.send_message(sentence)
+            buffer = sentence_chunks[0]
+
+    if buffer:
+        osc.set_typing_indicator(True)
+        full_response += f" {buffer}"
+        TextToSpeech.play_tts(sentence)
+        osc.send_message(sentence)
+        new_message["content"] = full_response
+
+    osc.set_typing_indicator(False)
+
+    JsonWrapper.write_json(constant.HISTORY_PATH, new_message)
+
+    transcription_result = ""
+
+    while not transcription_result:
+        start_time = datetime.datetime.now()
+        while True:
+            elapsed_time = (datetime.datetime.now() - start_time).total_seconds()
+            if elapsed_time > 2:
+                break
+
+    JsonWrapper.write_json(constant.HISTORY_PATH, transcription_result)
