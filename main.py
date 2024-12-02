@@ -39,7 +39,6 @@ history = [
 # Set up LLM
 openai_client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
 
-
 def chunk_text(text):
     """
     Args:
