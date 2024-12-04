@@ -83,12 +83,19 @@ Configure VRChat and Windows audio settings:
 
 1. Create a new system prompt file (e.g., `mad_system_prompt.txt`).
 2. Update the `mood_prompts` dictionary in the code.
-3. Add new commands in `command_catcher()` and `ai_system_command_catcher()`.
-4. Update the `additional_system_prompt.txt` file with the new mode details.
+3. Update the `additional_system_prompt.txt` file with the new mode details.
 
 ## Development
 
-For development and troubleshooting, refer to the comments and documentation within the code. If you encounter errors, please contact me for help.
+In the future we plan to:
+ - Allow NOVA to move on her own
+ - Re Factor code to have more modularity
+ - Allow for more control with a website hosted locally
+ - Update system prompts to allow for more human like responses
+ - Add more media coverage (Youtube, Website, Clips)
+ - Improved speed
+ - More teams working at once
+ - Update TTS
 
 ## Contributions
 
