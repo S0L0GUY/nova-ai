@@ -44,8 +44,7 @@ class SystemPrompt:
         
         mood_prompt_path = prompt_dict[mood]
         additional_prompt_path = prompt_dict['additional']
-        
-        mood_prompt_content = JsonWrapper.read_json(mood_prompt_path)
-        additional_prompt_content = JsonWrapper.read_json(additional_prompt_path)
+        mood_prompt_content = JsonWrapper.read_txt(mood_prompt_path)
+        additional_prompt_content = JsonWrapper.read_txt(additional_prompt_path)
         
         return mood_prompt_content + "\n" + additional_prompt_content

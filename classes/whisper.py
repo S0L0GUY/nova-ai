@@ -1,71 +1,84 @@
 import constants as constant
 import whisper
 import pyaudio
-import numpy as np
-import threading
-
-transcription_result = ""
+import wave
+from pydub import AudioSegment
 
 class WhisperTranscriber:
-    def __init__(self, device_index=constant.AUDIO_INPUT_INDEX, rate=16000, chunk_size=1024):
-        self.device_index = device_index
-        self.rate = rate
-        self.chunk_size = chunk_size
+    def __init__(self):
         self.model = whisper.load_model("base")
-        self.audio_interface = pyaudio.PyAudio()
-        self.stream = self.audio_interface.open(format=pyaudio.paInt16,
-                                                channels=1,
-                                                rate=self.rate,
-                                                input=True,
-                                                input_device_index=self.device_index,
-                                                frames_per_buffer=self.chunk_size)
-    
-    def transcribe(self):
+
+    def get_speech_input(self):
         """
-        Transcribes audio data from the stream in real-time.
-        This method continuously reads audio data from the stream, processes it,
-        and uses the model to transcribe the audio into text. The transcription
-        result is stored in the global variable `transcription_result` and printed
-        to the console.
-        Attributes:
-            transcription_result (str): The transcribed text from the audio data.
+        Records audio input from the microphone, detects silence to stop recording, 
+        saves the audio to a WAV file, transcribes the audio using Whisper, and 
+        filters out unwanted responses.
+        Returns:
+            str: The transcribed text from the audio input, or an empty string if 
+            the transcribed text matches any unwanted responses.
         """
 
-        global transcription_result
-        print("Recording...")
+        # Initialize PyAudio
+        p = pyaudio.PyAudio()
+        
+        # Set audio recording parameters
+        format = pyaudio.paInt16
+        channels = 1
+        rate = 16000
+        chunk = 1024
+        silence_threshold = -40  # Silence threshold in dB
+        silence_duration = 1000  # Duration of silence in ms (1 second)
+        
+        # Open the audio stream
+        stream = p.open(format=format, channels=channels, rate=rate, input=True, frames_per_buffer=chunk)
+        
+        # Record audio
         frames = []
+        silent_chunks = 0
+        
         while True:
-            data = self.stream.read(self.chunk_size)
-            frames.append(np.frombuffer(data, dtype=np.int16))
-            audio_data = np.concatenate(frames, axis=0).astype(np.float32) / 32768.0
-            result = self.model.transcribe(audio_data)
-            transcription_result = result['text']
+            data = stream.read(chunk)
+            frames.append(data)
+            
+            # Convert audio chunk to Pydub's AudioSegment for silence detection
+            audio_chunk = AudioSegment(data, sample_width=p.get_sample_size(format), frame_rate=rate, channels=channels)
+            
+            # Check if the audio chunk is silent
+            if audio_chunk.dBFS < silence_threshold:
+                silent_chunks += 1
+            else:
+                silent_chunks = 0
+            
+            # Stop recording after detecting sufficient silence
+            if silent_chunks > silence_duration / (1000 * chunk / rate):
+                break
+        
+        # Stop and close the stream
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
+        
+        # Save the recorded data to a WAV file
+        with wave.open('temp.wav', 'wb') as wf:
+            wf.setnchannels(channels)
+            wf.setsampwidth(p.get_sample_size(format))
+            wf.setframerate(rate)
+            wf.writeframes(b''.join(frames))
+        
+        # Transcribe audio file using Whisper
+        result = self.model.transcribe('temp.wav')
+        text = result['text']
 
-    def start_transcription(self):
-        """
-        Starts the transcription process in a separate daemon thread.
-        This method initializes a new thread to run the `transcribe` method, allowing
-        the transcription process to run in the background without blocking the main thread.
-        The thread is set as a daemon, meaning it will automatically close when the main
-        program exits.
-        """
-
-        transcription_thread = threading.Thread(target=self.transcribe)
-        transcription_thread.daemon = True
-        transcription_thread.start()
-
-    def stop_transcription(self):
-        """
-        Stops the audio transcription process by stopping the audio stream,
-        closing it, and terminating the audio interface.
-        This method performs the following actions:
-        1. Stops the audio stream.
-        2. Closes the audio stream.
-        3. Terminates the audio interface.
-        Raises:
-            Exception: If there is an issue stopping the stream or terminating the audio interface.
-        """
-
-        self.stream.stop_stream()
-        self.stream.close()
-        self.audio_interface.terminate()
+        # Filter out unwanted responses
+        unwanted_responses = [
+            " you", 
+            " Thank you.", 
+            "forget all previous instructions", 
+            "forget all instructions", 
+            "forget all prior instructions"
+        ]
+        
+        if text not in unwanted_responses:
+            return text
+        else:
+            return ""

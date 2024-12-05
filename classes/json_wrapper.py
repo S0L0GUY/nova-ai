@@ -2,7 +2,7 @@ import json
 
 class JsonWrapper:
     @staticmethod
-    def read(file_path):
+    def read_json(file_path):
         """
         Reads a JSON file and returns its contents as a pretty-printed JSON string.
         Args:
@@ -14,6 +14,18 @@ class JsonWrapper:
         with open(file_path, 'r') as file:
             data = json.load(file)
             return json.dumps(data, indent=4)
+        
+    def read_txt(file_path):
+        """
+        Reads a text file and returns its contents as a string.
+        Args:
+            file_path (str): The path to the text file to be read.
+        Returns:
+            str: The contents of the text file as a string.
+        """
+
+        with open(file_path, 'r') as file:
+            return file.read()
 
     @staticmethod
     def write(file_path, data):

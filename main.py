@@ -4,7 +4,7 @@ from classes.json_wrapper import JsonWrapper
 from classes.audio import AudioPlayer
 from classes.tts import TextToSpeech
 from classes.osc import VRChatOSC
-from constants import constant
+import constants as constant
 from openai import OpenAI
 import datetime
 import http_server
@@ -20,15 +20,11 @@ transcriber = WhisperTranscriber()
 osc.send_message("System Loading")
 osc.set_typing_indicator(True)
 
-# Set up the transcription thread
-transcriber.start_transcription()
-
 # Get the system prompt
-mood = JsonWrapper.read_json("mood.json")["mood"]
-system_prompt = SystemPrompt.get_full_prompt(mood)
+system_prompt = SystemPrompt.get_full_prompt("normal")
 
 # Set up history
-now = datetime.now()
+now = datetime.datetime.now()
 
 history = [
     {"role": "system", "content": system_prompt},
@@ -91,6 +87,7 @@ while True:
             while len(sentence_chunks) > 1:
                 sentence = sentence_chunks.pop(0)
                 full_response += f" {sentence}"
+                print(f"AI: {sentence}")
                 TextToSpeech.play_tts(sentence)
                 osc.send_message(sentence)
             buffer = sentence_chunks[0]
@@ -98,6 +95,7 @@ while True:
     if buffer:
         osc.set_typing_indicator(True)
         full_response += f" {buffer}"
+        print(f"AI: {buffer}")
         TextToSpeech.play_tts(sentence)
         osc.send_message(sentence)
         new_message["content"] = full_response
@@ -106,13 +104,12 @@ while True:
 
     JsonWrapper.write_json(constant.HISTORY_PATH, new_message)
 
-    transcription_result = ""
+    # Get user speech input
+    user_speech = ""
 
-    while not transcription_result:
-        start_time = datetime.datetime.now()
-        while True:
-            elapsed_time = (datetime.datetime.now() - start_time).total_seconds()
-            if elapsed_time > 2:
-                break
+    while not user_speech:
+        user_speech = transcriber.get_speech_input()
 
-    JsonWrapper.write_json(constant.HISTORY_PATH, transcription_result)
+    f"HUMAN: {user_speech}"
+
+    JsonWrapper.write_json(constant.HISTORY_PATH, user_speech)
