@@ -1,18 +1,20 @@
 from classes.whisper import WhisperTranscriber
 from classes.system_prompt import SystemPrompt
 from classes.json_wrapper import JsonWrapper
-from classes.tts import TextToSpeech
 from classes.osc import VRChatOSC
 import constants as constant
 from openai import OpenAI
 import datetime
+import pyttsx3
+import asyncio
 # import http_server
 import re
+import os
+import sounddevice as sd
+import soundfile as sf
 
 osc = VRChatOSC(constant.LOCAL_IP, constant.PORT)
 transcriber = WhisperTranscriber()
-
-tts = TextToSpeech()
 
 # Send message to VRChat to indicate that the system is starting
 osc.send_message("System Loading")
@@ -32,6 +34,27 @@ history = [
 
 # Set up LLM
 openai_client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
+
+def play_tts(text, output_device_index=constant.AUDIO_OUTPUT_INDEX):
+    engine = pyttsx3.init()
+    engine.setProperty('rate', 200)  # Speed of speech
+    engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
+    voices = engine.getProperty('voices')
+
+    file_path = f"tts_output.wav"
+
+    if os.path.exists(file_path):
+        os.remove("tts_output.wav")
+
+    engine.save_to_file(text, file_path)
+    engine.runAndWait()
+
+    def play_audio(file_path, output_device_index):
+        data, samplerate = sf.read(file_path, always_2d=True)
+        sd.play(data, samplerate, device=output_device_index)
+        sd.wait()
+
+    play_audio(file_path, output_device_index)
 
 def chunk_text(text):
     """
@@ -87,7 +110,7 @@ while True:
                 full_response += f" {sentence}"
                 print(f"AI: {sentence}")
                 osc.send_message(sentence)
-                tts.generate_speech(sentence)
+                play_tts(sentence)
             buffer = sentence_chunks[0]
 
     if buffer:
@@ -95,7 +118,7 @@ while True:
         full_response += f" {buffer}"
         print(f"AI: {buffer}")
         osc.send_message(buffer)
-        tts.generate_speech(buffer)
+        play_tts(buffer)
         new_message["content"] = full_response
 
     osc.set_typing_indicator(False)
