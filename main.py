@@ -1,14 +1,12 @@
 from classes.whisper import WhisperTranscriber
 from classes.system_prompt import SystemPrompt
 from classes.json_wrapper import JsonWrapper
-from classes.audio import AudioPlayer
 from classes.tts import TextToSpeech
 from classes.osc import VRChatOSC
 import constants as constant
 from openai import OpenAI
 import datetime
 import http_server
-import threading
 import re
 
 # pip install edge-tts
@@ -88,7 +86,7 @@ while True:
                 sentence = sentence_chunks.pop(0)
                 full_response += f" {sentence}"
                 print(f"AI: {sentence}")
-                TextToSpeech.play_tts(sentence)
+                TextToSpeech.play(sentence)
                 osc.send_message(sentence)
             buffer = sentence_chunks[0]
 
@@ -96,7 +94,7 @@ while True:
         osc.set_typing_indicator(True)
         full_response += f" {buffer}"
         print(f"AI: {buffer}")
-        TextToSpeech.play_tts(sentence)
+        TextToSpeech.play(buffer)
         osc.send_message(sentence)
         new_message["content"] = full_response
 
