@@ -6,13 +6,13 @@ from classes.osc import VRChatOSC
 import constants as constant
 from openai import OpenAI
 import datetime
-import http_server
+# import http_server
 import re
 
-# pip install edge-tts
-
-osc = VRChatOSC()
+osc = VRChatOSC(constant.LOCAL_IP, constant.PORT)
 transcriber = WhisperTranscriber()
+
+tts = TextToSpeech()
 
 # Send message to VRChat to indicate that the system is starting
 osc.send_message("System Loading")
@@ -86,21 +86,21 @@ while True:
                 sentence = sentence_chunks.pop(0)
                 full_response += f" {sentence}"
                 print(f"AI: {sentence}")
-                TextToSpeech.play(sentence)
                 osc.send_message(sentence)
+                tts.generate_speech(sentence)
             buffer = sentence_chunks[0]
 
     if buffer:
         osc.set_typing_indicator(True)
         full_response += f" {buffer}"
         print(f"AI: {buffer}")
-        TextToSpeech.play(buffer)
-        osc.send_message(sentence)
+        osc.send_message(buffer)
+        tts.generate_speech(buffer)
         new_message["content"] = full_response
 
     osc.set_typing_indicator(False)
 
-    JsonWrapper.write_json(constant.HISTORY_PATH, new_message)
+    JsonWrapper.write(constant.HISTORY_PATH, new_message)
 
     # Get user speech input
     user_speech = ""
@@ -110,4 +110,4 @@ while True:
 
     f"HUMAN: {user_speech}"
 
-    JsonWrapper.write_json(constant.HISTORY_PATH, user_speech)
+    JsonWrapper.write(constant.HISTORY_PATH, user_speech)
